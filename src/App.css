@@ -1,0 +1,418 @@
+    /* section {
+        padding: 100px 0;
+    } */
+
+    /* hero Start */
+    .hero-margin {
+        margin-top: 80px;
+        margin-bottom: 80px;
+    }
+
+    @media only screen and (max-width: 990px) {
+        .hero-margin {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+    }
+
+    @media only screen and (max-width: 360px) {
+        .team-content {
+            padding: 15% 15px 0;
+        }
+
+        .our-team .social li {
+            margin-right: 0;
+        }
+    }
+
+    /* Hero End */
+    .active {
+
+
+        padding-bottom: 12px;
+        border-bottom: 3px solid blue;
+
+    }
+
+    section h2.section-heading {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 40px;
+    }
+
+    section h3.section-subheading {
+        margin-bottom: 75px;
+        text-transform: none;
+        font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-style: italic;
+        font-weight: 400;
+    }
+
+
+    /* features  Start*/
+    .our-team {
+        overflow: hidden;
+        border-radius: 50%;
+        position: relative;
+        box-shadow: 0 10px 40px -10px rgba(0, 64, 128, .2);
+
+    }
+
+    .our-team img {
+        width: 100%;
+        height: auto;
+        position: relative;
+        right: 0;
+        -webkit-transition: all 0.4s ease-in-out 0s;
+        transition: all 0.4s ease-in-out 0s;
+    }
+
+    .our-team:hover img {
+        right: 60%;
+    }
+
+    .our-team .team-content {
+        width: 80%;
+        height: 100%;
+        background: #fcfcfc;
+        padding: 20% 30px 0;
+        position: absolute;
+        top: 0;
+        right: -80%;
+        -webkit-transition: all 0.4s ease-in-out 0s;
+        transition: all 0.4s ease-in-out 0s;
+    }
+
+    .our-team:hover .team-content {
+        right: 0;
+    }
+
+    .our-team .title {
+        font-size: 22px;
+        color: #554c86;
+        margin: 0 0 5px 0;
+        font-weight: 500;
+    }
+
+    .our-team .post {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .our-team .description {
+        font-size: 14px;
+        color: #191b26;
+    }
+
+    .our-team .social {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .our-team .social li {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .our-team .social li:last-child {
+        margin-right: 0;
+    }
+
+    .our-team .social li a {
+        display: block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 14px;
+        color: #fff;
+        border-radius: 4px;
+        text-align: center;
+        -webkit-transition: all 0.3s ease-in-out 0s;
+        transition: all 0.3s ease-in-out 0s;
+        border: 1px solid #eee;
+    }
+
+    .our-team .social li a:hover {
+        color: #fff;
+    }
+
+    .our-team .social li a.fa-facebook {
+        background: #3b5a9b;
+        border: 1px solid #3b5a9b;
+    }
+
+    .our-team .social li a.fa-twitter {
+        background: #2baae1;
+        border: 1px solid #2baae1;
+    }
+
+    .our-team .social li a.fa-youtube {
+        background: #c3181e;
+        border: 1px solid #c3181e;
+    }
+
+    @media only screen and (max-width: 990px) {
+        .our-team {
+            margin-bottom: 50px;
+        }
+    }
+
+    @media only screen and (max-width: 360px) {
+        .team-content {
+            padding: 15% 15px 0;
+        }
+
+        .our-team .social li {
+            margin-right: 0;
+        }
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .section-title {
+        margin-bottom: 60px;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .section-title h2 {
+        font-size: 45px;
+        font-weight: 600;
+        margin-top: 0;
+        position: relative;
+        text-transform: capitalize;
+    }
+
+
+    /* Accordian Start */
+
+
+
+    .ftco-faqs .myaccordion {
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .ftco-faqs .myaccordion .card,
+    .ftco-faqs .myaccordion .card:last-child .card-header {
+        border: none;
+        background: transparent;
+    }
+
+    .ftco-faqs .myaccordion .card-header {
+        border: none;
+        background: transparent;
+    }
+
+    .ftco-faqs .myaccordion .card-header p {
+        position: relative;
+        font-weight: 500;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    .ftco-faqs .myaccordion .fa {
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.3);
+    }
+
+    .ftco-faqs .myaccordion .btn {
+        width: 100%;
+        font-weight: 600;
+        color: black;
+        padding: 0;
+        text-transform: capitalize;
+        letter-spacing: 0;
+        border-radius: 0 !important;
+        margin-bottom: 10px;
+        border-radius: 40px !important;
+        -webkit-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+        -moz-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+        box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+        text-decoration: none;
+    }
+
+    .ftco-faqs .myaccordion .btn-link:hover {
+        background-color: #008bbd;
+        color: #fff !important;
+        text-decoration: none;
+    }
+
+    .ftco-faqs .myaccordion .btn-link:focus {
+        text-decoration: none;
+    }
+
+    .ftco-faqs button[aria-expanded="true"] {
+        background-color: #008bbd;
+        color: #fff !important;
+    }
+
+    .ftco-faqs button[aria-expanded="false"] {
+        background-color: #fff;
+    }
+
+    .ftco-faqs .card-body {
+        background: #fff;
+        margin-bottom: 10px;
+        border-radius: 30px;
+        -webkit-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+        -moz-box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+        box-shadow: 0px 2px 8px -4px rgba(0, 0, 0, 0.21) !important;
+    }
+
+
+    /* Input Type */
+
+
+    .input {
+
+        height: 2.75rem;
+        width: 100%;
+        appearance: none;
+        border-radius: 0.375rem;
+        border-width: 1px;
+        opacity: 1;
+        border-color: rgba(209, 213, 219, 0.6);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .input:focus {
+        /* border-color: rgb(146, 146, 238); */
+        outline: 5px solid transparent;
+        outline-offset: 8px;
+        border: 2px solid rgb(179, 179, 232);
+
+    }
+
+    .input:hover {
+        /* border-color: rgb(146, 146, 238); */
+        border: 2px solid blue;
+        outline: 5px solid transparent;
+        outline-offset: 8px;
+
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+    }
+
+    /* Contact */
+
+    .contact-info__wrapper {
+        overflow: hidden;
+        border-radius: .625rem .625rem 0 0
+    }
+
+    @media (min-width: 1024px) {
+        .contact-info__wrapper {
+            border-radius: 0 .625rem .625rem 0;
+            padding: 5rem !important
+        }
+    }
+
+    .contact-info__list span.position-absolute {
+        left: 0
+    }
+
+    .z-index-101 {
+        z-index: 101;
+    }
+
+    .list-style--none {
+        list-style: none;
+    }
+
+    .contact__wrapper {
+        background-color: #fff;
+        border-radius: 0 0 .625rem .625rem
+    }
+
+    @media (min-width: 1024px) {
+        .contact__wrapper {
+            border-radius: .625rem 0 .625rem .625rem
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .contact-form__wrapper {
+            padding: 5rem !important
+        }
+    }
+
+    .shadow-lg,
+    .shadow-lg--on-hover:hover {
+        box-shadow: 0 1rem 3rem rgba(132, 138, 163, 0.1) !important;
+    }
+
+
+    /* Login Register */
+
+    .auth-card {
+        width: 80%;
+    }
+
+    @media only screen and (max-width: 990px) {
+        .auth-card {
+            margin-bottom: 50px;
+            width: 100%;
+        }
+    }
+
+    @media only screen and (max-width: 360px) {
+        .auth-card {
+            margin-bottom: 50px;
+            width: 100%;
+        }
+
+        .team-content {
+            padding: 15% 15px 0;
+        }
+
+        .our-team .social li {
+            margin-right: 0;
+        }
+    }
+
+
+
+    /* file input */
+
+
+
+    /* profile Image */
+    .avatar.avatar-large {
+        height: 140px !important;
+        width: 140px !important;
+    }
+
+    .avatar.avatar-ex-sm {
+        max-height: 25px !important;
+    }
+
+
+    /* Footer Start */
+    .footer {
+        background: #202942;
+        position: relative;
+        color: #adb5bd;
+    }
+    .footer .footer-py-30 {
+        padding: 30px 0;
+    }
+ 
