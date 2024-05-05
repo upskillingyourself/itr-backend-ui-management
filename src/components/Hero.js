@@ -12,7 +12,7 @@ const Hero = () => {
                             <h1 className=" fw-bold mb-2 mb-lg-x1 lh-base mt-3 mt-lg-0"> File income tax return online here </h1>
                             <p className=" text-muted mb-3 mb-lg-4 lh-lg"> File income tax return online here .File income tax return online here.File income tax return online here </p>
                             <div className="d-flex justify-content-center justify-content-lg-start">
-                                <Link to="" className="btn btn-outline-primary btn-lg lh-xl mb-4 mb-md-5 mb-lg-7">More Here</Link></div>
+                                <Link to="/knowledge-center" className="btn btn-outline-primary btn-lg lh-xl mb-4 mb-md-5 mb-lg-7">More Here</Link></div>
                             <p className="mb-x1 fs-10 button-text text-uppercase fw-bold lh-base text-300">Download our app</p>
                             <div className="d-flex flex-wrap justify-content-center justify-content-lg-start gap-2 position-relative z-2">
                                 <Link to="" className="border-0 p-0 bg-transparent cursor-pointer rounded-1" >

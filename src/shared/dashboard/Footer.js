@@ -31,7 +31,7 @@ const Footer = () => {
                                     <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white"><FaTwitter /></Link></li>
                                     <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white"><FaLinkedinIn /></Link></li>
                                     <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white"><FaFacebook /></Link></li> */}
-                                    <li className="list-inline-item mb-0 rounded"><Link to="#" className='text-align-center text-decoration-none text-white'>Privacy Policy</Link>
+                                    <li className="list-inline-item mb-0 rounded"><Link to="/privacy-policy" className='text-align-center text-decoration-none text-white'>Privacy Policy</Link>
                                 </li>
                                 <li className="list-inline-item mb-0 rounded"><Link to="#" className='text-align-center text-decoration-none text-white'>Terms & Condations</Link>
                                 </li>

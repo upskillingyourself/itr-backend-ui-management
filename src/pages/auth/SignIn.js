@@ -4,22 +4,52 @@ import { Link, useNavigate } from 'react-router-dom';
 import { setUserSession } from '../../utils/common';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+
+  import base64 from 'base-64';
 const SignIn = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
+  
+  
   const onSubmit = async (data) => {
+    console.log(data);
     try {
-      console.log(data);
-      setUserSession("5555", data)
-      navigate("/dashboard")
-      // Add your submission logic here, like calling an API
+      const username = data.username;
+      const password = data.password;
+      const encodedCredentials = base64.encode(`${username}:${password}`);
+      console.log("encodedCredentials",encodedCredentials)
+      const headers = {
+        Authorization: `Basic ${encodedCredentials}`
+        
+      };
+      // console.log("Authorization",Authorization)
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE}login`, { headers });
+  
+      console.log('Response:', response.data);
+      if (response.status === 200) {
+        toast.success('Successfully Login!');
+      }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      if (error.response && error.response.status === 403) {
+        toast.error('Forbidden Error');
+        console.error('Forbidden Error:', error);
+      } else {
+        toast.error('Network Error');
+        console.error('Error:', error);
+      }
     }
   };
+  
+  
 
   return (
     <>
+    <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       {/* <section className="p-3 p-md-4 p-xl-3 mt-xl-5">
         <div className="container">
           <div className="card border-light-subtle shadow-sm">
@@ -88,16 +118,16 @@ const SignIn = () => {
         </div>
       </section> */}
 
-      <div class="back-to-home" style={{
+      {/* <div class="back-to-home" style={{
         position: "fixed",
         bottom: "10px",
         right: "10px",
         zIndex: "1",
       }}>
         <Link to="/" class="back-button btn btn-icon btn-danger"><IoMdArrowBack /> <span>Back To Home</span></Link>
-      </div>
+      </div> */}
 
-      <section class="d-flex align-items-center" style={{ backgroundPosition: "center center" }}>
+      <section class="d-flex align-items-center" style={{ minHeight:"100vh", backgroundPosition: "center center" }}>
 
         <div class="container">
           <div class="row align-items-center">
@@ -114,11 +144,11 @@ const SignIn = () => {
                     <div class="row">
                       <div class="col-lg-12">
                         <div class="mb-3">
-                          <label class="form-label">Your Email <span class="text-danger">*</span></label>
+                          <label class="form-label">Username <span class="text-danger">*</span></label>
                           <div class="form-icon position-relative">
 
-                            <input type="email" class="input" placeholder="Enter Your Email" name="email" {...register('email', { required: true })} />
-                            {errors.email && <span className="text-danger">This field is required</span>}
+                            <input type="text" class="input" placeholder="Enter Your Email" name="userName" {...register('username', { required: true })} />
+                            {errors.UserName && <span className="text-danger">This field is required</span>}
                           </div>
                         </div>
                       </div>
@@ -154,7 +184,7 @@ const SignIn = () => {
                         </div>
                       </div>
 
-                      <div class="col-lg-12 mt-4 text-center">
+                      {/* <div class="col-lg-12 mt-4 text-center">
                         <h6>Or Login With</h6>
                         <div class="row">
                           <div class="col-6 mt-3">
@@ -179,7 +209,7 @@ const SignIn = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
 
                       <div class="col-12 text-center">
                         <p class="mb-0 mt-3"><small class="text-dark me-2">Don't have an account ?</small> <Link to="/signup" class="text-dark fw-bold text-decoration-none">Sign Up</Link></p>

@@ -43,7 +43,7 @@ const AboutUs = () => {
 
     return (
         <>
-            <section className="section" >
+            <section className="section  py-5 " style={{minHeight:"100vh"}} >
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">

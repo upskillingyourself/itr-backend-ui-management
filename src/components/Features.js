@@ -15,36 +15,36 @@ const Features = () => {
                     <div className=' d-flex flex-column   align-items-center'>
                         <div class="our-team " style={{ width: "150px" }}>
                             <img src="images/expert.jpg" alt="" />
-                            <div class="team-content">
+                            {/* <div class="team-content">
                                 <h3 class="title">Expert Assistance</h3>
-                            </div>
+                            </div> */}
                         </div>
                         <h3 class="title mt-4">Expert Assistance</h3>
                     </div>
                     <div className=' d-flex flex-column  align-items-center'>
                         <div class="our-team " style={{ width: "150px" }}>
                             <img src="images/expert.jpg" alt="" />
-                            <div class="team-content">
+                            {/* <div class="team-content">
                                 <h3 class="title ">Save Time & Cost</h3>
-                            </div>
+                            </div> */}
                         </div>
                         <h3 class="title mt-4">Save Time & Cost</h3>
                     </div>
                     <div className=' d-flex flex-column  align-items-center'>
                         <div class="our-team " style={{ width: "150px" }}>
                             <img src="images/expert.jpg" alt="" />
-                            <div class="team-content">
+                            {/* <div class="team-content">
                                 <h3 class="title">User Friendly</h3>
-                            </div>
+                            </div> */}
                         </div>
                         <h3 class="title mt-4">User Friendly</h3>
                     </div>
                     <div className=' d-flex flex-column  align-items-center'>
                         <div class="our-team " style={{ width: "150px" }}>
                             <img src="images/expert.jpg" alt="" />
-                            <div class="team-content">
+                            {/* <div class="team-content">
                                 <h3 class="title">Secure & Reliable</h3>
-                            </div>
+                            </div> */}
                         </div>
                         <h3 class="title mt-4">Secure & Reliable</h3>
                     </div>

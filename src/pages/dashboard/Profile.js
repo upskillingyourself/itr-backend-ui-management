@@ -52,18 +52,19 @@ const Profile = () => {
             
 
             <div className="col-lg-12 col-12">
-              <div className="border-bottom pb-4">
+              {/* <div className="border-bottom pb-4">
                 <h5>Karan Sharma</h5>
                 <p className="text-muted mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
                 </p>
-              </div>
+              </div> */}
 
               <div className="border-bottom pb-4">
                 <div className="row">
-                  <div className="col-md-6 mt-4">
+                  <div className="col-md-12 mt-4">
+                    
+                    <div className="mt-4  p-3 rounded shadow">
                     <h5>Personal Details :</h5>
-                    <div className="mt-4">
-                      <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center my-4">
                         <i data-feather="mail" className="fea icon-ex-md text-muted me-3"></i>
                         <div className="flex-1">
                           <h6 className="text-primary mb-0">Email :</h6>
@@ -74,8 +75,8 @@ const Profile = () => {
                       <div className="d-flex align-items-center mt-3">
                         <i data-feather="gift" className="fea icon-ex-md text-muted me-3"></i>
                         <div className="flex-1">
-                          <h6 className="text-primary mb-0">Birthday :</h6>
-                          <p className="text-muted mb-0">2nd March, 1996</p>
+                          <h6 className="text-primary mb-0">Pan Card Number :</h6>
+                          <p className="text-muted mb-0">RDCR5566</p>
                         </div>
                       </div>
                       <div className="d-flex align-items-center mt-3">
@@ -95,7 +96,7 @@ const Profile = () => {
                     </div>
                   </div>
 
-                  <div className="col-md-6 mt-4 pt-2 pt-sm-0">
+                  {/* <div className="col-md-6 mt-4 pt-2 pt-sm-0">
                     <h5>Lorem :</h5>
 
                     <div className="d-flex features feature-primary key-feature align-items-center p-3 rounded shadow mt-4">
@@ -124,7 +125,7 @@ const Profile = () => {
                     </div>
 
                     
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

@@ -24,15 +24,15 @@ const Contact = () => {
                                 <h3 className="mb-5">Get in Touch</h3>
                                 <ul className="contact-info__list list-style--none position-relative z-index-101">
                                     <li className="mb-4 pl-4">
-                                        <span className="position-absolute"><FaEnvelope /></span> support@ToraTax.com
+                                        <span className="position-absolute"><FaEnvelope /></span> support@toratax.com
                                     </li>
                                     <li className="mb-4 pl-4">
-                                        <span className="position-absolute"><FaPhone /></span> (000)-000000-000
+                                        <span className="position-absolute"><FaPhone /></span> 9990670020
                                     </li>
                                     <li className="mb-4 pl-4">
                                         <span className="position-absolute"><FaLocationDot /></span> TorTax .
-                                        <br /> 265, Noida
-                                        <br /> India, 556625
+                                        <br /> Lucknow ,Uttar Pradesh ,
+                                        <br /> India
                                         <div className="mt-3"></div>
                                     </li>
                                 </ul>

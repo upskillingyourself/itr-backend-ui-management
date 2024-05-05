@@ -19,24 +19,24 @@ const Footer = () => {
                                 </div>
                             </div>
 
-                            <div className="col-sm-5 mt-4 mt-sm-0 pt-2 pt-sm-0">
+                            <div className="col-sm-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
                                 <div className="text-center">
                                     <p className="mb-0">© {new Date().getFullYear()} ToraTax. </p>
                                 </div>
                             </div>
 
-                            <div className="col-sm-4 mt-4 mt-sm-0 pt-2 pt-sm-0 ">
+                            <div className="col-sm-3 mt-4 mt-sm-0 pt-2 pt-sm-0 ">
                                 <ul className="text-sm-end mb-0 d-flex justify-content-center gap-3">
                                     {/* <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white text-decoration-none"><FaInstagram /></Link></li>
                                     <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white"><FaTwitter /></Link></li>
                                     <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white"><FaLinkedinIn /></Link></li>
                                     <li className="list-inline-item mb-0 rounded"><Link to="#" className="rounded text-white"><FaFacebook /></Link></li> */}
-                                    <li className="list-inline-item mb-0 rounded"><Link to="#" className='text-align-center text-decoration-none text-white'>Privacy Policy</Link>
+                                    <li className="list-inline-item mb-0 rounded"><Link  to="/privacy-policy" className='text-align-center text-decoration-none text-white'>Privacy Policy</Link>
                                 </li>
-                                <li className="list-inline-item mb-0 rounded"><Link to="#" className='text-align-center text-decoration-none text-white'>Terms & Condations</Link>
+                                <li className="list-inline-item mb-0 rounded"><Link to="terms-&-condations" className='text-align-center text-decoration-none text-white'>Terms & Condations</Link>
                                 </li>
-                                <li className="list-inline-item mb-0 rounded"><Link to="/about-us" className='text-align-center text-decoration-none text-white'>About Us</Link>
-                                </li>
+                                {/* <li className="list-inline-item mb-0 rounded"><Link to="/about-us" className='text-align-center text-decoration-none text-white'>About Us</Link>
+                                </li> */}
                                 </ul>
                             </div>
                         </div>

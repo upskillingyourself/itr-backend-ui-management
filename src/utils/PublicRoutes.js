@@ -8,9 +8,9 @@ import Footer from '../shared/Footer';
 const PublicRoutes = () => {
   return !getToken() ? 
   <>
-  <Navbar/>
+  {/* <Navbar/> */}
   <Outlet />
-  <Footer/>
+  {/* <Footer/> */}
   </>
    : <Navigate  to="/" />
 }

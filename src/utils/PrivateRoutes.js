@@ -9,9 +9,9 @@ const PrivateRoutes = props => {
 
   return getToken() ?
     <> 
-    <NavBar/>
+    {/* <NavBar/> */}
     <Outlet />
-    <Footer/>
+    {/* <Footer/> */}
      </> : <Navigate to="/signin" />
 }
 

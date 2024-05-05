@@ -1,5 +1,6 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React from 'react';
 import './App.css';
 import Home from './pages/home/Home';
 
@@ -12,31 +13,50 @@ import PrivateRoutes from './utils/PrivateRoutes';
 import Dashboard from './pages/dashboard/Dashboard';
 import Profile from './pages/dashboard/Profile';
 import AboutUs from './pages/about/AboutUs';
+import Navbar from './shared/Navbar';
+import ContactUs from './pages/contact/ContactUs';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermCondation from './pages/TermCondation';
+import KnowledgeCenter from './pages/knowledge-center/KnowledgeCenter';
 
 
 function App() {
   return (
-    <div className="App">
+     <div className="App">
 
       <BrowserRouter>
 
-
+        <Navbar />
         <Routes>
           <Route path='*' element={<ErrorPage />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/about-us' element={<AboutUs />} />
+          <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+          <Route path='/terms-&-condations' element={<TermCondation />} />
+          <Route path='/contact-us' element={<ContactUs />} />
+          <Route path='/knowledge-center' element={<KnowledgeCenter />} />
+
+
           <Route element={<PublicRoutes />}>
-            <Route path='/' element={<Home />} />
-            <Route path='/about-us' element={<AboutUs />} />
+
+
           </Route>
           <Route element={<PrivateRoutes />}>
-          <Route path='/dashboard' element={< Dashboard/>} />
-          <Route path='/profile' element={< Profile/>} />
+            <Route path='/about-us' element={<AboutUs />} />
+            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+            <Route path='/terms-&-condations' element={<TermCondation />} />
+            <Route path='/contact-us' element={<ContactUs />} />
+
+            <Route path='/dashboard' element={< Dashboard />} />
+            <Route path='/profile' element={< Profile />} />
           </Route>
 
 
-          
+
         </Routes>
+        <Footer />
 
       </BrowserRouter>
     </div>
