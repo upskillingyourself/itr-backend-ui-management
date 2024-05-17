@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { Link, Button, Element, Events, animateScroll as scroll, scrollSpy } from 'react-scroll';
-import NavBar from './dashboard/NavBar';
+// import { Link, Button, Element, Events, animateScroll as scroll, scrollSpy } from 'react-scroll';
+// import NavBar from './dashboard/NavBar';
 import { getToken, removeUserSession } from '../utils/common';
+import Cookies from "js-cookie";
 
 const Navbar = () => {
 
   const location = useLocation();
   const navigate = useNavigate()
   const [click, setClick] = useState(false)
-  const closeMenu = () => setClick(!click)
+  // const closeMenu = () => setClick(!click)
   const [isToken, setToken] = useState(false)
+  // console.log("isToken",isToken);
 
+  const token = getToken()
   useEffect(() => {
-    const token = getToken()
 
     { token ? setToken(true) : setToken(false) }
 
 
-  })
+  },[token])
   const handleLogout = () => {
     removeUserSession();
+    Cookies.remove('emailId')
+    Cookies.remove('firstName')
+    Cookies.remove('lastName')
+    Cookies.remove('phoneNumber')
+    Cookies.remove('role')
+    Cookies.remove('userName')
     navigate("/signin");
   };
-  const handleSignIn = () => {
-    navigate('/signin')
-  }
-  const handleSignUp = () => {
-    navigate('/signup')
-  }
+ 
 
   return (
     <div className='header sticky-top ' style={{ backgroundColor: "#4384f9" }}>
@@ -53,7 +56,7 @@ const Navbar = () => {
               <li className={`nav-item ${location.pathname === '/about-us' ? 'active' : ''}`}>
                 <NavLink className="nav-link fw-semibold text-decoration-none text-white" to="/about-us">About Us</NavLink>
               </li>
-              <li className={`nav-item ${location.pathname === '/knowledge-centre' ? 'active' : ''}`}>
+              <li className={`nav-item ${location.pathname === '/knowledge-center' ? 'active' : ''}`}>
                 <NavLink className="nav-link fw-semibold text-decoration-none text-white" to="/knowledge-center">Knowledge Centre</NavLink>
               </li>
               <li className={`nav-item ${location.pathname === '/contact-us' ? 'active' : ''}`}>

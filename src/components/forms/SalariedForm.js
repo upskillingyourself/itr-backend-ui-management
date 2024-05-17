@@ -1,16 +1,67 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import Cookies from 'js-cookie';
+import { getToken } from '../../utils/common';
 
-const SalariedForm = () => {
+const SalariedForm = ({cardType}) => {
+  // console.log('cardType form',cardType);
+
+  
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showForm, setShowForm] = useState(true);
   const [progress, setProgress] = useState({ started: false, pc: 0 });
   const [msg, setMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (data) => {
+
+  const userName=Cookies.get('userName')
+  const token = getToken()
+  // console.log(token);
+  const onSubmit = async(data) => {
     // Handle form submission here
-    console.log(data);
+    const salaried = cardType === 'Salaried';
+    
+    const allData ={
+      ...data,
+      itrYear:String(new Date().getFullYear()),
+      salaried: salaried ? 'true' : 'false',
+      userId:userName,
+    }
+
+    console.log("itr form allData",allData);
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        process.env.REACT_APP_API_BASE + "itrrequest",allData,
+        // {
+        //   withCredentials: true, // Allow sending cookies
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     // "crossdomain": true, // Inform server about cross-origin request
+        //     // Add other headers as needed
+        //      'X-XSRF-TOKEN':'9a5e8825-cd57-4e42-aab4-67c47f56900e',
+        //     'Authorization':token
+            
+        //   },
+        // }
+      );
+
+      console.log("itrrequest response", response);
+      setLoading(false);
+      toast.success("Form Submitted Successfully...!");
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+      if (error.response) {
+          toast.error("Something went wrong. Please try again later.");
+        
+      } else {
+        toast.error("Network Error");
+        console.error(error);
+      }
+    }
   };
 
   const handleUpload = async (fieldName) => {
@@ -22,24 +73,8 @@ const SalariedForm = () => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
+    
 
-    try {
-      const response = await axios.post('https://your-upload-endpoint', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setProgress({ started: true, pc: percentage });
-        },
-      });
-
-      console.log('File uploaded successfully:', response.data);
-      setMsg('Upload successful');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      setMsg('Upload failed');
-    }
   };
 
   const handleBack = () => {
@@ -52,29 +87,38 @@ const SalariedForm = () => {
 
   return (
     <>
+    <Toaster position="top-center" reverseOrder={false} />
       <form onSubmit={handleSubmit(onSubmit)} className="">
         <div className="row">
-          {showForm ? (
+          {/* {showForm ? ( */}
             <>
               {/* First part of the form */}
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="Name">Name</label>
-                  <input type="text" className="input" id="Name" {...register("Name", { required: true })} placeholder="Enter your name" />
-                  {errors.Name && <span>This field is required</span>}
+                  <label className="form-label mb-2" htmlFor="firstName">First Name</label>
+                  <input type="text" className="input" id="firstName" {...register("firstName", { required: true })} placeholder="Enter your First Name" />
+                  {errors.firstName && <span>This field is required</span>}
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
+                  <label className="form-label mb-2" htmlFor="lastName">Last Name</label>
+                  <input type="text" className="input" id="lastName" {...register("lastName", { required: true })} placeholder="Enter your Last Name" />
+                  {errors.lastName && <span>This field is required</span>}
+                </div>
+              </div>
+              
+              <div className="col-sm-6 mb-3">
+                <div className="form-group">
                   <label className="form-label mb-2" htmlFor="email">Email</label>
-                  <input type="email" className="input" id="email" {...register("email", { required: true })} placeholder="Enter your email" />
+                  <input type="email" className="input" id="email" {...register("emailId", { required: true })} placeholder="Enter your email" />
                   {errors.email && <span>This field is required</span>}
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
                   <label className="form-label mb-2">Phone Number</label>
-                  <input type="tel" className="input" id="phone" {...register("phone")} placeholder="(021)-454-545" />
+                  <input type="tel" className="input" id="phone" {...register("mobileNumber")} placeholder="Enter your mobile number" />
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
@@ -85,12 +129,14 @@ const SalariedForm = () => {
               </div>
               {/* Other fields */}
               <div className="col-sm-12 mb-3 d-flex justify-content-end">
-                <button  type="button" onClick={changeForm} className="btn btn-primary  ">Next</button>
+                <button  type="submit" 
+                // onClick={changeForm}
+                 className="btn btn-primary  ">Next</button>
               </div>
             </>
-          ) : (
+          {/* ) : (
             <>
-              {/* Second part of the form */}
+              
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
                   <label className="form-label mb-2">PAN Document</label>
@@ -131,8 +177,8 @@ const SalariedForm = () => {
                 <button type="submit" className="btn btn-primary">Submit</button>
               </div>
             </>
-          )}
-        </div>
+          )}*/}
+        </div> 
       </form>
     </>
   );
