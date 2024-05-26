@@ -37,9 +37,9 @@ const Cards = () => {
                                 <h5>AT RS. 699/- ONLY</h5>
                                 <p title="">(50 % DISCOUNT <del>₹1400/ </del> &nbsp; ₹699/- )</p>
                             </div>
-                            <div className='text-end'>
+                            {/* <div className='text-end'>
                                 <Button variant=" " className="btn btn-outline-light mb-3" onClick={() => handleClick('Salaried')}> Get Start </Button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -53,9 +53,9 @@ const Cards = () => {
                                 <h5>AT RS. 799/- ONLY</h5>
                                 <p >(50 % DISCOUNT <del>₹1600/ </del> &nbsp; ₹799/- )</p>
                             </div>
-                            <div className='text-end'>
+                            {/* <div className='text-end'>
                                 <Button variant=" " className="btn btn-outline-primary mb-3" onClick={() => handleClick('Non Salaried')}> Get Start </Button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

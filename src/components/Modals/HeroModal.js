@@ -10,30 +10,6 @@ const HeroModal = ({ show, handleClose, cardType }) => {
   const [panFile, setPanFile] = useState();
 
   const [showForm, setShowForm] = useState(true);
-  const onSubmit = (data) => {
-    // Handle the submission of file data
-    console.log(data);
-
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
-    console.log(data, config);
-    // axios
-    //   .post("https://example.com/upload", data, config)
-
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-  };
-
-
-
 
   function changeForm() {
     console.log("run");

@@ -9,11 +9,15 @@ import Hero from '../../components/Hero'
 import Auth from '../../components/Auth'
 import Contact from '../../components/Contact'
 import About from '../../components/About'
+import Cookies from "js-cookie";
 
 
 const Home = () => {
+//     const dd = Cookies.get('XSRF-TOKEN')
+//   console.log('dd',dd);
     return (
         <>
+        
            <Hero/>
            <Features/>
            <Faq/>
