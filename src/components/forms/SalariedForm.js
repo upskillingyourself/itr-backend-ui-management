@@ -7,7 +7,7 @@ import { getToken } from '../../utils/common';
 import './file.css'
 import FileUpload from './FilesUpload';
 
-const SalariedForm = ({ cardType }) => {
+const SalariedForm = ({ cardType,handleClose }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [showForm, setShowForm] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const SalariedForm = ({ cardType }) => {
       userId: userName,
     };
     console.log('allData',allData);
-    // setShowForm(!showForm);
+    //  setShowForm(!showForm);
     setLoading(true);
     try {
       const response = await axios.post(process.env.REACT_APP_API_BASE + "itrrequest", allData,
@@ -111,7 +111,7 @@ const SalariedForm = ({ cardType }) => {
               </div>
             </>
           ) : (
-             <FileUpload setShowForm={setShowForm}/>
+             <FileUpload setShowForm={setShowForm} handleClose={handleClose}/>
           )}
         </div>
       </form>

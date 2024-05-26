@@ -28,7 +28,7 @@ const HeroModal = ({ show, handleClose, cardType }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <SalariedForm cardType={cardType}/>
+        <SalariedForm cardType={cardType} handleClose={handleClose}/>
 
 
 

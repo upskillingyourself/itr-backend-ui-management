@@ -108,8 +108,8 @@ console.log('isUserData',isUserData);
       );
       setLoading(false);
       setUserData(response.data.yearlyDataDetails)
-      console.log('itrrequest response',response.data);
-      // toast.success("get Successfully!");
+      console.log('itrrequest response',response.data.yearlyDataDetails);
+      toast.success("Form Submitted Successfully!");
     } catch (error) {
       setLoading(false);
       if (error.response) {
@@ -150,7 +150,7 @@ console.log('isUserData',isUserData);
                           <h3 className="title mb-0">
                             {firstName} {lastName}
                             </h3>
-                          
+                          {/* <small className="text-muted h6 me-2">Noida, Uttar Pradesh,22663</small> */}
                           <small className="text-muted h6 me-2 d-block mt-2">Username : {userName} </small>
 
                         </div>
@@ -177,7 +177,11 @@ console.log('isUserData',isUserData);
 
 
             <div className="col-lg-12 col-12">
-              
+              {/* <div className="border-bottom pb-4">
+                <h5>Karan Sharma</h5>
+                <p className="text-muted mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
+                </p>
+              </div> */}
 
               <div className="border-bottom pb-4">
                 <div className="row">
@@ -190,18 +194,38 @@ console.log('isUserData',isUserData);
                         <thead className="bg-light">
                           <tr>
                             <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
-                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
+                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>Request Id/Type</th>
                             <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th>
                             <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
-                           
+                            {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>InDate</th> */}
                             <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th>
                             <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
-                           
+                            {/* <th scope="col" className="border-bottom p-3 text-end ">Actions</th> */}
                           </tr>
                         </thead>
                         <tbody>
-                        
-                          
+                          {/* {jsonData.map((item, index) => (
+                      <tr key={index}>
+                        <td className="p-3">
+                          <div className="d-flex">
+                            <span className="text-muted h5"><FaClipboardList /></span>
+                            <div className="flex-1 content ms-3">
+                              <a href={`forums-topic.html?id=${item.id}`} className="forum-title text-primary fw-bold text-decoration-none">{item.name}</a>
+                              <p className="text-muted small mb-0 mt-1">{item.location}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center small p-3 h6 text-muted">{item.type}</td>
+                        <td className="text-center small p-3 text-muted">{item.date}</td>
+                        <td className="small p-3 text-end">
+                          <div className='d-flex gap-3 justify-content-end'>
+                            <span className='text-muted h5'><FaUserEdit /></span>
+                            <span className='text-muted h5'><MdDelete /></span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))} */}
+                          {/* Assuming 'data' is your array of items */}
                           {rtr_requests.map((item, index) => (
                             <tr key={index}>
                               <td className="p-3">{index + 1}</td>
@@ -209,22 +233,27 @@ console.log('isUserData',isUserData);
                                 <div className="d-flex">
                                   <span className="text-muted h5"><FaClipboardList /></span>
                                   <div className="flex-1 content ms-3">
-                                    <p className="text-primary fw-bold mb-0"> 
+                                    <p className="text-primary fw-bold mb-0">ITR RequestYear: 
                                     {/* {isUserData.yearlyDataDetails.itrYear} */}
-                                    {isUserData && isUserData.itrYear}
+                                    {/* {item.request_id} */}
                                     </p>
-                                    {/* <p className="text-muted small mb-1">Document Type: {item.document_type}</p> */}
-                                    
+                                    <p className="text-muted small mb-1">Document Type: {item.document_type}</p>
+                                    {/* <p className="text-muted small mb-0">Status: {item.status}</p> */}
                                   </div>
                                 </div>
 
                               </td>
                               <td className="text-center small p-3 text-muted">{item.request_date}</td>
                               <td className="text-center small p-3 text-muted">{item.status}</td>
-                              
+                              {/* <td className="text-center small p-3 text-muted">{item.filing_reference_number}</td> */}
                               <td className="text-center small p-3 text-muted">{item.comments}</td>
                               <td className="text-center small p-3 text-muted">{item.payment_status}</td>
-                             
+                              {/* <td className="small p-3 text-end">
+                                <div className='d-flex gap-3 justify-content-end'>
+                                  <span className='text-muted h5'><FaUserEdit /></span>
+                                  <span className='text-muted h5'><MdDelete /></span>
+                                </div>
+                              </td> */}
                             </tr>
                           ))}
 
@@ -233,7 +262,16 @@ console.log('isUserData',isUserData);
                       </table>
                     </div>
 
-                    
+                    {/* <div className="mt-4  p-3 rounded shadow">
+                      <h5>Personal Details :</h5>
+                      <div className="d-flex align-items-center my-4">
+                        <i data-feather="mail" className="fea icon-ex-md text-muted me-3"></i>
+                        <div className="flex-1">
+                          <h6 className="text-primary mb-0">Email :</h6>
+                          <Link to="#" className="text-muted">karan@mail.com</Link>
+                        </div>
+                      </div>
+                    </div> */}
                   </div>
 
 
