@@ -84,7 +84,7 @@ const SignUp = () => {
                         <div className="mb-3">
                           <label className="form-label">Last name <span className="text-danger"></span></label>
                           <div className="form-icon position-relative">
-                            <input type="text" className="input" placeholder="Last Name" name="lastName" {...register('lastName', { required: true })} />
+                            <input type="text" className="input" placeholder="Last Name" name="lastName" {...register('lastName')} />
                             {errors.lastName && <span classNameName="text-danger">This field is required</span>}
                           </div>
                         </div>
