@@ -14,7 +14,9 @@ const Contact = () => {
     return (
         <>
             <section className='py-5' id='contact'>
-                <div className="container" style={{ marginTop: "80px", marginBottom: "80px" }}>
+                <div className="container" 
+                //</section>style={{ marginTop: "80px", marginBottom: "80px" }}
+                >
                     <div className='mx-auto w-75 mb-5'>
                         <h1 className='text-center '> <span className='active'>Contact Us</span> </h1>
                     </div>

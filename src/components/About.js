@@ -8,9 +8,11 @@ const About = () => {
     return (
         <>
             <section className='py-5' id='about' style={{ backgroundColor: "rgba(244, 247, 250)" }}>
-                <div className="container" style={{ marginTop: "80px", marginBottom: "80px" }}>
+                <div className="container" 
+                // style={{ marginTop: "80px", marginBottom: "80px" }}
+                >
                     <div className='mx-auto w-75 mb-4'>
-                        <h1 className='text-center '> <span className='active'>About Us</span> </h1>
+                        <h1 className='text-center '> <span >About Us</span> </h1>
                     </div>
                     <div class="container" style={{ marginTop: "50px" }}>
                         <div class="row align-items-center">

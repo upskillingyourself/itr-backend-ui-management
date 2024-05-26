@@ -4,7 +4,9 @@ const Features = () => {
     return (
         <>
          <section id='features' className="py-5 bg-white ftco-faqs">
-            <div className="container"style={{marginTop:"80px",marginBottom:"80px"}}>
+            <div className="container" 
+            //style={{marginTop:"80px",marginBottom:"80px"}}
+            >
                 <div className='mx-auto w-75 mb-5'>
                     <h1 className='text-center '>Simple solution for assisted E-Filing of ITR </h1>
                     <p className=' text-center mt-3 '>These Terms & Conditions govern your use of TORATAX website and services.

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Hero = () => {
   return (
     <div>
-        <section className='py-5 ' id='home' style={{ backgroundColor: "rgba(244, 247, 250)" }}>
+        <section className='py-2 ' id='home' style={{ backgroundColor: "rgba(244, 247, 250)" }}>
                 <div className="container hero-margin">
                     <div className="row gy-4 gy-md-8 pt-9 pt-lg-0 ">
                         <div className="col-lg-5 text-center text-lg-start ">
