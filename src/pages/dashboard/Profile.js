@@ -90,10 +90,16 @@ console.log('isUserData',isUserData);
   const userName = Cookies.get('userName')
   const token = getToken();
 
+  console.log('role',role);
   useEffect( ()=>{
-    console.log();
+    if(role==='admin'){
+      adminData()
 
-    userData()
+    }else{
+      userData()
+    }
+    
+    
 
   },[])
 
@@ -119,6 +125,10 @@ console.log('isUserData',isUserData);
         console.error(error);
       }
     }
+  }
+
+  const adminData= async()=>{
+
   }
  
   return (
@@ -183,19 +193,24 @@ console.log('isUserData',isUserData);
                 <div className="row">
                   <div className="col-md-12 mt-4">
                     <div className="border-bottom pb-4">
-                      <h5>RTR Details  </h5>
+                      {role==='admin' ? 
+                      <h5>Details  </h5>
+                      :
+                      <h5>ITR Details  </h5>
+                    }
+                      
                     </div>
                     <div className="table-responsive bg-white shadow rounded mt-4">
+                      {role==='admin'?
+                     
                       <table className="table mb-0 table-center">
                         <thead className="bg-light">
                           <tr>
                             <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
-                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th>
+                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>Request details</th>
+                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>In Date</th>
                             <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
-                           
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
+                         
                            
                           </tr>
                         </thead>
@@ -221,9 +236,7 @@ console.log('isUserData',isUserData);
                               </td>
                               <td className="text-center small p-3 text-muted">{item.request_date}</td>
                               <td className="text-center small p-3 text-muted">{item.status}</td>
-                              
-                              <td className="text-center small p-3 text-muted">{item.comments}</td>
-                              <td className="text-center small p-3 text-muted">{item.payment_status}</td>
+                            
                              
                             </tr>
                           ))}
@@ -231,6 +244,54 @@ console.log('isUserData',isUserData);
 
                         </tbody>
                       </table>
+                      :
+                      <table className="table mb-0 table-center">
+                      <thead className="bg-light">
+                        <tr>
+                          <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
+                          <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
+                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th>
+                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
+                         
+                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th>
+                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
+                         
+                        </tr>
+                      </thead>
+                      <tbody>
+                      
+                        
+                        {rtr_requests.map((item, index) => (
+                          <tr key={index}>
+                            <td className="p-3">{index + 1}</td>
+                            <td className="p-3">
+                              <div className="d-flex">
+                                <span className="text-muted h5"><FaClipboardList /></span>
+                                <div className="flex-1 content ms-3">
+                                  <p className="text-primary fw-bold mb-0"> 
+                                  {/* {isUserData.yearlyDataDetails.itrYear} */}
+                                  {isUserData && isUserData.itrYear}
+                                  </p>
+                                  {/* <p className="text-muted small mb-1">Document Type: {item.document_type}</p> */}
+                                  
+                                </div>
+                              </div>
+
+                            </td>
+                            <td className="text-center small p-3 text-muted">{item.request_date}</td>
+                            <td className="text-center small p-3 text-muted">{item.status}</td>
+                            
+                            <td className="text-center small p-3 text-muted">{item.comments}</td>
+                            <td className="text-center small p-3 text-muted">{item.payment_status}</td>
+                           
+                          </tr>
+                        ))}
+
+
+                      </tbody>
+                    </table>
+                      
+                      }
                     </div>
 
                     
