@@ -1,169 +1,131 @@
+import toast, { Toaster } from "react-hot-toast";
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { getToken } from "../../utils/common";
 
-const SalariedForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const [showForm, setShowForm] = useState(true);
-  const onSubmit = (data) => {
-    // Handle form submission here
-    console.log(data);
+const FileUpload = ({ setShowForm, handleClose }) => {
+    const [uploadStatus, setUploadStatus] = useState({});
+    const { register, formState: { errors } } = useForm();
+    const token = getToken();
 
-  };
-  function changeForm() {
-    console.log("run");
-    setShowForm(!showForm);
-  }
-  function handleBack() {
-    setShowForm(true);
-  }
+    const documentMapping = {
+        aadharDocument: { documentTypeId: 1, documentName: "Aadhar" },
+        panDocument: { documentTypeId: 2, documentName: "PAN" },
+        drivingLicence: { documentTypeId: 3, documentName: "Driving Licence" },
+        otherDocument: { documentTypeId: 4, documentName: "Other Document" },
+        passport: { documentTypeId: 5, documentName: "Passport" },
+        form16Document: { documentTypeId: 6, documentName: "Form-16" },
+    };
 
-
-  // fafd
-
-  const [file, setFile] = useState()
-  const [progress, setProgress] = useState({ started: false, pc: 0 });
-  const [msg, setMsg] = useState(null)
-  function handleUpload() {
-    if (!file) {
-      setMsg("No File Sellected");
-      return;
-    }
-    const fd = new FormData();
-    fd.append('file', file);
-    setMsg("Uploading...")
-    setProgress(prevState => {
-      return { ...prevState, started: true }
-    })
-    axios.post('https://upload/post', fd, {
-      onUploadProgress: (ProgressEvent) => {
-        setProgress(prevState => {
-          return { ...prevState, pc: ProgressEvent.progress * 100 }
+    // Function to handle file uploads
+    const handleUpload = async (fieldName) => {
+        const selectedFile = document.getElementById(fieldName).files[0];
+        if (!selectedFile) {
+            toast.error("No File Selected");
+            return;
         }
 
-        )
-      },
-      headers: {
-        "Custom-Header": "value",
-      }
-    })
-      .then(res => {
-        setMsg("Upload Successful")
-        console.log(res.data);
-      })
-      .catch(err => {
-        setMsg("Upload failed")
-        console.error(err);
-      })
-  }
-  return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)} className="">
-        <div className="row">
-          {showForm ? (
-            <>
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="Name">Name</label>
-                  <input type="text" className="input" id="Name" {...register("Name", { required: true })} placeholder="Enter your name" />
-                  {errors.Name && <span>This field is required</span>}
+        const documentInfo = documentMapping[fieldName];
+        var info = JSON.stringify({ typeId: documentInfo.documentTypeId })
+        const formData = new FormData();
+        formData.append('document', selectedFile);
+        formData.append('info', info);
+
+        try {
+            setUploadStatus((prevStatus) => ({ ...prevStatus, [fieldName]: 'Uploading...' }));
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE}fileupload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': token,
+                },
+            });
+            console.log('fileupload', response);
+            setUploadStatus((prevStatus) => ({ ...prevStatus, [fieldName]: 'Upload Complete' }));
+            toast.success("File uploaded successfully!");
+        } catch (error) {
+            setUploadStatus((prevStatus) => ({ ...prevStatus, [fieldName]: 'Upload Failed' }));
+            toast.error("File upload failed. Please try again.");
+        }
+    };
+
+    const handleBack = () => {
+        setShowForm(true);
+    };
+
+    const handlePaymentSuccess = (response) => {
+        console.log(response);
+        toast.success("Payment successful!");
+        handleClose();
+    };
+
+    const handlePaymentFailure = (response) => {
+        console.error(response);
+        toast.error("Payment failed. Please try again.");
+    };
+
+    const handleSubmit = async () => {
+        console.log(token);
+        const paymentAmount = 1000; // Set your desired payment amount here
+        try {
+            const orderResponse = await axios.post('https://api.toratax.com/toratax/rest/v1.0/createOrder',{ amount: paymentAmount },
+            {
+                headers: {
+                    'Authorization': token,
+                }
+            
+            });
+            const order = orderResponse.data;
+
+        const options = {
+            key: process.env.RAZORPAY_KEY_ID || 'rzp_test_CJdIyOaRepCj8r', // Replace with your Razorpay key ID
+            amount: paymentAmount * 100, // Amount in the smallest currency unit (e.g., paise)
+            currency: "INR",
+            name: "ToraTax",
+            description: "Test Transaction",
+            // image: "https://example.com/your_logo",
+            handler: handlePaymentSuccess,
+            prefill: {
+                name: " Sat",
+                email: "sat@gmail.com",
+                contact: "83828694"
+            },
+            notes: {
+                address: "Easy Billing Home"
+            },
+            theme: {
+                color: "#3399cc"
+            }
+        };
+
+        const rzp1 = new window.Razorpay(options);
+        rzp1.on("payment.failed", handlePaymentFailure);
+        rzp1.open();
+    } catch (error) {
+        console.error(error);
+        toast.error("Unable to create order. Please try again.");
+    }
+    };
+
+    return (
+        <>
+            <Toaster position="top-center" reverseOrder={false} />
+            {Object.keys(documentMapping).map((fieldName) => (
+                <div className="col-sm-6 mb-3" key={fieldName}>
+                    <div className="form-group">
+                        <label className="form-label mb-2" htmlFor={fieldName}>{documentMapping[fieldName].documentName}</label>
+                        <input type="file" className="file" id={fieldName} {...register(fieldName)} />
+                        <button type="button" className="btn btn-secondary mt-2" onClick={() => handleUpload(fieldName)}>Upload</button>
+                        {uploadStatus[fieldName] && <small className="form-text text-muted">{uploadStatus[fieldName]}</small>}
+                    </div>
                 </div>
-              </div>
+            ))}
+            <div className="col-sm-12 mb-3 d-flex justify-content-end gap-3">
+                <button type="button" onClick={handleBack} className="btn btn-outline-primary">Back</button>
+                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+            </div>
+        </>
+    );
+};
 
-
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="email">Email</label>
-
-                  <input type="email" className="input" id="email" {...register("email", { required: true })} placeholder="Enter your email" />
-                  {errors.email && <span>This field is required</span>}
-                </div>
-              </div>
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2">Phone Number</label>
-                  <input type="tel" className="input" id="phone" {...register("phone")} placeholder="(021)-454-545" />
-                </div>
-              </div>
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2">PAN Number</label>
-                  <input type="text" className="input" id="pan" {...register("pan")} placeholder="ABCDE1234F" />
-                </div>
-              </div>
-              {/* <hr /> */}
-              <div className="col-sm-12 mb-3 d-flex justify-content-end">
-                <button type="button" onClick={changeForm} className="btn btn-primary  ">Next </button>
-              </div>
-            </>
-
-          ) : (
-            <>
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2">PAN Document</label>
-                  <input type="file" onChange={(e) => {setFile( e.target.files[0]) }} />
-                  <button onClick={handleUpload}>Upload</button>
-                  {progress.started && <progress max="100" value={progress.pc}></progress>}
-                  {msg && <span>{msg}</span>}
-                </div>
-              </div>
-
-
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2">PAN Document</label>
-                  <input type="file" className="input" id="panDocument" {...register("panDocument")} />
-                </div>  
-              </div>
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="aadharDocument">Aadhar Document</label>
-                  <input type="file" className="input form-control-file" id="aadharDocument" {...register("aadharDocument")} />
-                </div>
-              </div>
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="bankStatement">Bank Statement</label>
-                  <input type="file" className="input" id="bankStatement" {...register("bankStatement")} />
-                </div>
-              </div>
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="form16Document">Form-16 Document</label>
-                  <input type="file" className="input" id="form16Document" {...register("form16Document")} />
-                </div>
-              </div>
-
-              <div className="col-sm-6 mb-3">
-                <div className="form-group">
-                  <label className="form-label mb-2" htmlFor="otherDocument">Other Document</label>
-                  <input type="file" className="input" id="otherDocument" {...register("otherDocument")} />
-                </div>
-              </div>
-
-
-              <div className="col-sm-12 mb-3 d-flex justify-content-end gap-3">
-                <button type="submit" onClick={handleBack} className="btn btn-outline-primary  ">Back</button>
-                <button type="submit" className="btn btn-primary  ">Submit</button>
-              </div></>
-          )}
-
-
-
-          {/* File input fields for document upload */}
-
-        </div>
-      </form>
-    </>
-  )
-}
-
-export default SalariedForm;
+export default FileUpload;

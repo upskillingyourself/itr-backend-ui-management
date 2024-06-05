@@ -6,15 +6,30 @@ import Cookies from 'js-cookie';
 import { getToken } from '../../utils/common';
 import './file.css'
 import FileUpload from './FilesUpload';
+import { useEffect } from 'react';
 
 const SalariedForm = ({ cardType,handleClose }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors },setValue } = useForm();
   const [showForm, setShowForm] = useState(true);
+  const [isFieledData, setFieledData] = useState({});
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState({});
 
   const userName = Cookies.get('userName');
   const token = getToken();
+
+  const firstName = Cookies.get('firstName')
+  const lastName = Cookies.get('lastName')
+  const emailId = Cookies.get('emailId')
+  const phoneNumber = Cookies.get('phoneNumber')
+
+
+  useEffect(()=>{
+    setValue('firstName',firstName)
+    setValue('lastName',lastName)
+    {emailId !== 'null' && (setValue('emailId',emailId))}
+    setValue('mobileNumber',phoneNumber)
+  })
 
   const onSubmit = async (data) => {
     const salaried = cardType === 'Salaried';
@@ -25,7 +40,8 @@ const SalariedForm = ({ cardType,handleClose }) => {
       userId: userName,
     };
     console.log('allData',allData);
-    //  setShowForm(!showForm);
+    // setFieledData(allData)
+    // setShowForm(!showForm);
     setLoading(true);
     try {
       const response = await axios.post(process.env.REACT_APP_API_BASE + "itrrequest", allData,
@@ -37,8 +53,9 @@ const SalariedForm = ({ cardType,handleClose }) => {
       );
       setLoading(false);
       setShowForm(!showForm);
+      setFieledData(allData)
       console.log('itrrequest response',response);
-      toast.success("Form Submitted Successfully!");
+      // toast.success("Form Submitted Successfully!");
     } catch (error) {
       setLoading(false);
       if (error.response) {
@@ -69,21 +86,21 @@ const SalariedForm = ({ cardType,handleClose }) => {
                 <div className="form-group">
                   <label className="form-label mb-2" htmlFor="firstName">First Name</label>
                   <input type="text" className="input" id="firstName" {...register("firstName", { required: true })} placeholder="Enter your First Name" />
-                  {errors.firstName && <span>This field is required</span>}
+                  {errors.firstName && <span className="text-danger">This field is required</span>}
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
                   <label className="form-label mb-2" htmlFor="lastName">Last Name</label>
                   <input type="text" className="input" id="lastName" {...register("lastName", { required: true })} placeholder="Enter your Last Name" />
-                  {errors.lastName && <span>This field is required</span>}
+                  {errors.lastName && <span className="text-danger">This field is required</span>}
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
                   <label className="form-label mb-2" htmlFor="email">Email</label>
                   <input type="email" className="input" id="email" {...register("emailId", { required: true })} placeholder="Enter your email" />
-                  {errors.emailId && <span>This field is required</span>}
+                  {errors.emailId && <span className="text-danger">This field is required</span>}
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
@@ -111,7 +128,7 @@ const SalariedForm = ({ cardType,handleClose }) => {
               </div>
             </>
           ) : (
-             <FileUpload setShowForm={setShowForm} handleClose={handleClose}/>
+             <FileUpload setShowForm={setShowForm} handleClose={handleClose} cardType={cardType} isFieledData={isFieledData}/>
           )}
         </div>
       </form>

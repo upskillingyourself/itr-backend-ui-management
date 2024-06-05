@@ -20,15 +20,11 @@ const SignIn = () => {
       const encodedCredentials = base64.encode(`${username}:${password}`);
       
       const headers = {
-
-        
         Authorization: `Basic ${encodedCredentials}`
       };
 
       const response = await axios.get(`${process.env.REACT_APP_API_BASE}login`, {
         headers,
-      
-        // withCredentials: true // Ensure cookies are sent
       },
     );
 
@@ -40,6 +36,7 @@ const SignIn = () => {
       
       // Save other user data from response
       const userData = response.data;
+      console.log('userData',userData);
       setUserSession(authorizationHeader,userData.userName);
       Cookies.set('firstName', userData.firstName);
       Cookies.set('lastName', userData.lastName);
@@ -57,10 +54,14 @@ const SignIn = () => {
       }, 1000);
     } catch (error) {
       setLoading(false);
-      if (error.response && error.response.status === 403) {
-        toast.error('Forbidden Error');
-      } else {
-        toast.error('Network Error');
+      if (error.response && error.response.status === 401) {
+        toast.error('Unauthorized');
+      }
+      else if(error.response && error.response.status === 302 ){
+        toast.error('Please enter valid username & password');
+      }
+      else {
+        toast.error('Please enter valid username & password');
       }
     }
   };

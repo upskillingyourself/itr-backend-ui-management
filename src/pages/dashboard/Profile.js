@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { FaInstagram, FaLinkedinIn, FaClipboardList, FaUserEdit, FaRegEdit } from "react-icons/fa";
-import { AiOutlineDelete } from "react-icons/ai";
+
 import { IoMdSettings } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import { BiSolidEdit } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { getToken } from '../../utils/common';
+import { GrDocumentImage } from "react-icons/gr";
+import { AiOutlineDelete } from "react-icons/ai";
+import { FaEdit } from "react-icons/fa";
+import { LiaEdit } from "react-icons/lia";
+import DocumentShowModal from '../../components/Modals/DocumentShowModal';
+
 const jsonData = [
   {
     "id": 1,
@@ -78,9 +84,12 @@ const rtr_requests = [
 ]
 
 const Profile = () => {
+  const navigate=useNavigate();
   const [loading, setLoading] = useState(false);
   const [isUserData, setUserData] = useState();
-console.log('isUserData',isUserData);
+  const [isUser, setUser] = useState({});
+  const [show, setShow] = useState(false);
+console.log('isUser',isUser);
  console.log('isUserData',isUserData);
   const firstName = Cookies.get('firstName')
   const lastName = Cookies.get('lastName')
@@ -114,15 +123,17 @@ console.log('isUserData',isUserData);
       );
       setLoading(false);
       setUserData(response.data.yearlyDataDetails)
+      setUser(response.data)
       console.log('itrrequest response',response.data);
       // toast.success("get Successfully!");
     } catch (error) {
       setLoading(false);
-      if (error.response) {
-        toast.error("Something went wrong. Please try again later.");
+      if (error.response && error.response.status===404) {
+        toast.error("Data NOT FOUND!");
       } else {
         toast.error("Network Error");
         console.error(error);
+        // navigate('/signin')
       }
     }
   }
@@ -131,6 +142,11 @@ console.log('isUserData',isUserData);
 
   }
  
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+      
+       setShow(true);
+  };
   return (
     <>
     <Toaster position="top-center" reverseOrder={false} />
@@ -206,10 +222,11 @@ console.log('isUserData',isUserData);
                       <table className="table mb-0 table-center">
                         <thead className="bg-light">
                           <tr>
-                            <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
-                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>Request details</th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>In Date</th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
+                            <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>User ID</th>
+                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>Requested Year </th>
+                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Payment Status</th>
+                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comment</th>
+                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Action</th>
                          
                            
                           </tr>
@@ -217,7 +234,7 @@ console.log('isUserData',isUserData);
                         <tbody>
                         
                           
-                          {rtr_requests.map((item, index) => (
+                          {isUserData?  rtr_requests.map((item, index) => (
                             <tr key={index}>
                               <td className="p-3">{index + 1}</td>
                               <td className="p-3">
@@ -239,7 +256,16 @@ console.log('isUserData',isUserData);
                             
                              
                             </tr>
-                          ))}
+                          ))
+                        
+                        :
+                        <tr>
+                        <td>
+                         <h5> data not avilable </h5>
+
+                        </td>
+                      </tr>
+                        }
 
 
                         </tbody>
@@ -250,18 +276,19 @@ console.log('isUserData',isUserData);
                         <tr>
                           <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
                           <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
-                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th>
+                          {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th> */}
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
                          
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th>
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
+                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Action</th>
                          
                         </tr>
                       </thead>
                       <tbody>
                       
                         
-                        {rtr_requests.map((item, index) => (
+                        { isUserData ? rtr_requests.map((item, index) => (
                           <tr key={index}>
                             <td className="p-3">{index + 1}</td>
                             <td className="p-3">
@@ -278,14 +305,34 @@ console.log('isUserData',isUserData);
                               </div>
 
                             </td>
-                            <td className="text-center small p-3 text-muted">{item.request_date}</td>
+                            {/* <td className="text-center small p-3 text-muted">{item.request_date}</td> */}
                             <td className="text-center small p-3 text-muted">{item.status}</td>
                             
                             <td className="text-center small p-3 text-muted">{item.comments}</td>
                             <td className="text-center small p-3 text-muted">{item.payment_status}</td>
+                            <td className="text-center small p-3 text-muted">
+                              <div className='d-flex gap-3 justify-content-center align-items-center '>
+                                <div  className='cursor-pointer' onClick={() => handleShow(index)}>
+                              <GrDocumentImage className='text-warning fs-5'/>
+                                </div>
+                                  
+                               {/* <LiaEdit className='text-success '/> */}
+                               <AiOutlineDelete className='text-danger fs-4'/>
+
+
+                              </div>
+                              </td>
                            
                           </tr>
-                        ))}
+                        ))
+                      :
+                      <tr>
+                        <td>
+                         <h5> data not avilable </h5>
+
+                        </td>
+                      </tr>
+                      }
 
 
                       </tbody>
@@ -305,6 +352,7 @@ console.log('isUserData',isUserData);
           </div>
         </div>
       </section>
+      <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails}/>
     </>
   )
 }

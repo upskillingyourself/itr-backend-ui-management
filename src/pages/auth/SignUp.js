@@ -4,34 +4,37 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 
-
 const SignUp = () => {
-  const { register, handleSubmit,reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
   const navigate = useNavigate();
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (data) => {
-    
     console.log(data);
-    setLoading(true)
+    setLoading(true);
+    if (data.password !== data.confirmPassword) {
+      toast.error('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_BASE + "register", data)
-        setLoading(false)
+        process.env.REACT_APP_API_BASE + "register", data
+      );
+      setLoading(false);
       console.log('Response:', response.data);
       if (response.status === 201) {
-        toast.success('Successfully Registured!');
-      } 
-      setTimeout(()=>{
-        navigate('/signin')
-      },2000)
-      reset()
-
+        toast.success( response.data);
+      }
+      setTimeout(() => {
+        navigate('/signin');
+      }, 2000);
+      reset();
     } catch (error) {
-      setLoading(false)
-      if (error.response && error.response.status === 403) {
-        // Show forbidden error
-        toast.error('Forbidden Error');
-        console.error('Forbidden Error:', error);
+      setLoading(false);
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data);
       } else {
         // Handle other errors
         toast.error('Network Error');
@@ -39,7 +42,8 @@ const SignUp = () => {
       }
     }
   };
-  
+
+  const password = watch('password');
 
   return (
     <>
@@ -65,9 +69,8 @@ const SignUp = () => {
                         <div className="mb-3">
                           <label className="form-label">User Name (Email / Mobile Number ) <span className="text-danger">*</span></label>
                           <div className="form-icon position-relative">
-
                             <input type="text" className="input" placeholder="Enter Your User Name" name="userName" {...register('userName', { required: true })} />
-                            {errors.userName && <span classNameName="text-danger">This field is required</span>}
+                            {errors.userName && <span className="text-danger">This field is required</span>}
                           </div>
                         </div>
                       </div>
@@ -76,7 +79,7 @@ const SignUp = () => {
                           <label className="form-label">First name <span className="text-danger">*</span></label>
                           <div className="form-icon position-relative">
                             <input type="text" className="input" placeholder="First Name" name="firstName" {...register('firstName', { required: true })} />
-                            {errors.firstName && <span classNameName="text-danger">This field is required</span>}
+                            {errors.firstName && <span className="text-danger">This field is required</span>}
                           </div>
                         </div>
                       </div>
@@ -85,78 +88,39 @@ const SignUp = () => {
                           <label className="form-label">Last name <span className="text-danger"></span></label>
                           <div className="form-icon position-relative">
                             <input type="text" className="input" placeholder="Last Name" name="lastName" {...register('lastName')} />
-                            {errors.lastName && <span classNameName="text-danger">This field is required</span>}
+                            {errors.lastName && <span className="text-danger">This field is required</span>}
                           </div>
                         </div>
                       </div>
-
 
                       <div className="col-lg-12">
                         <div className="mb-3">
                           <label className="form-label">Password <span className="text-danger">*</span></label>
                           <div className="form-icon position-relative">
-                            <input type="password" className="input" placeholder=" Enter Your Password"{...register('password', { required: true, minLength: 6 })} />
-                            {errors.password && errors.password.type === 'required' && <span classNameName="text-danger">This field is required</span>}
-                            {errors.password && errors.password.type === 'minLength' && <span classNameName="text-danger">Password must be at least 6 characters long</span>}
-
+                            <input type="password" className="input" placeholder="Enter Your Password" {...register('password', { required: true, minLength: 6 })} />
+                            {errors.password && errors.password.type === 'required' && <span className="text-danger">This field is required</span>}
+                            {errors.password && errors.password.type === 'minLength' && <span className="text-danger">Password must be at least 6 characters long</span>}
                           </div>
                         </div>
                       </div>
                       <div className="col-lg-12">
                         <div className="mb-3">
-                          <label className="form-label"> Confirm Password <span className="text-danger">*</span></label>
+                          <label className="form-label">Confirm Password <span className="text-danger">*</span></label>
                           <div className="form-icon position-relative">
-                            {/* <i data-feather="key" className="fea icon-sm icons"></i> */}
-                            <input type="password" className="input" placeholder=" Enter Your Password"{...register('password', { required: true, minLength: 6 })} />
-                            {errors.password && errors.password.type === 'required' && <span classNameName="text-danger">This field is required</span>}
-                            {errors.password && errors.password.type === 'minLength' && <span classNameName="text-danger">Password must be at least 6 characters long</span>}
-
+                            <input type="password" className="input" placeholder="Confirm Your Password" {...register('confirmPassword', { 
+                              required: true, 
+                              validate: value => value === password || 'Passwords do not match'
+                            })} />
+                            {errors.confirmPassword && <span className="text-danger">{errors.confirmPassword.message}</span>}
                           </div>
                         </div>
                       </div>
-
-                      {/* <div className="col-md-12">
-                        <div className="mb-3">
-                          <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                            <label className="form-check-label" for="flexCheckDefault">I Accept <Link to="#" className="text-primary">Terms And Condition</Link></label>
-                          </div>
-                        </div>
-                      </div> */}
 
                       <div className="col-lg-12 mb-0">
                         <div className="d-grid">
-                          
-                          <button className="btn btn-primary" disabled={loading}>{loading ? "Signing Up...":"Sign Up" }</button>
+                          <button className="btn btn-primary" disabled={loading}>{loading ? "Signing Up..." : "Sign Up"}</button>
                         </div>
                       </div>
-
-                      {/* <div className="col-lg-12 mt-4 text-center">
-                        <h6>Or Sign Up With</h6>
-                        <div className="row">
-                          <div className="col-6 mt-3">
-                            <div className="d-grid">
-                              <Link to="" className="btn btn-light d-flex align-items-center justify-content-center gap-2">
-                                <span classNameName='text-primary'>
-                                  <FaFacebook />
-                                </span>
-                                <span> Facebook</span>
-                              </Link>
-                            </div>
-                          </div>
-
-                          <div className="col-6 mt-3">
-                            <div className="d-grid">
-                              <Link to="" className="btn btn-light d-flex align-items-center justify-content-center gap-2">
-                                <span classNameName='text-danger'>
-                                  <FaGoogle />
-                                </span>
-                                <span> Google</span>
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div> */}
 
                       <div className="col-12 text-center">
                         <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/signin" className="text-dark fw-bold text-decoration-none">Sign In</Link></p>
