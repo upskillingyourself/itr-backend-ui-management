@@ -1,60 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import Cookies from 'js-cookie';
-import { getToken } from '../../utils/common';
+import { getToken, removeUserSession } from '../../utils/common';
 import './file.css'
 import FileUpload from './FilesUpload';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const SalariedForm = ({ cardType,handleClose }) => {
-  const { register, handleSubmit, formState: { errors },setValue } = useForm();
+const SalariedForm = ({ cardType, handleClose,selectedFee }) => {
+  console.log('selectedFee',selectedFee);
+  const navigate=useNavigate()
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
   const [showForm, setShowForm] = useState(true);
   const [isFieledData, setFieledData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState({});
 
   const userName = Cookies.get('userName');
   const token = getToken();
 
-  const firstName = Cookies.get('firstName')
-  const lastName = Cookies.get('lastName')
-  const emailId = Cookies.get('emailId')
-  const phoneNumber = Cookies.get('phoneNumber')
+  const firstName = Cookies.get('firstName');
+  const lastName = Cookies.get('lastName');
+  const emailId = Cookies.get('emailId');
+  const phoneNumber = Cookies.get('phoneNumber');
 
+  const currentYear = new Date().getFullYear();
 
-  useEffect(()=>{
-    setValue('firstName',firstName)
-    setValue('lastName',lastName)
-    {emailId !== 'null' && (setValue('emailId',emailId))}
-    setValue('mobileNumber',phoneNumber)
-  })
+  useEffect(() => {
+    
+    setValue('firstName', firstName);
+    setValue('lastName', lastName);
+    if (emailId !== 'null') {
+      setValue('emailId', emailId);
+    }
+    if (phoneNumber !== 'null') {
+      setValue('mobileNumber', phoneNumber);
+    }
+    
+    setValue('itrYear', currentYear);  // Set default value for itrYear
+  }, [setValue, firstName, lastName, emailId, phoneNumber, currentYear]);
+
+  const generateYears = () => {
+    const years = [];
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      years.push(i);
+    }
+    return years;
+  };
 
   const onSubmit = async (data) => {
     const salaried = cardType === 'Salaried';
     const allData = {
       ...data,
-      itrYear: String(new Date().getFullYear()),
       salaried: salaried ? 'true' : 'false',
       userId: userName,
     };
-    console.log('allData',allData);
-    // setFieledData(allData)
+    // setLoading(true);
+    console.log('alldata',allData);
+    // setFieledData(allData);
     // setShowForm(!showForm);
-    setLoading(true);
     try {
-      const response = await axios.post(process.env.REACT_APP_API_BASE + "itrrequest", allData,
-      {
+      const response = await axios.post(process.env.REACT_APP_API_BASE + "itrrequest", allData, {
         headers: {
           'Authorization': token,
         },
-      }
-      );
+      });
       setLoading(false);
       setShowForm(!showForm);
-      setFieledData(allData)
-      console.log('itrrequest response',response);
+      setFieledData(allData);
+      console.log('itrrequest response', response);
       // toast.success("Form Submitted Successfully!");
     } catch (error) {
       setLoading(false);
@@ -63,17 +77,11 @@ const SalariedForm = ({ cardType,handleClose }) => {
       } else {
         toast.error("Network Error");
         console.error(error);
+          removeUserSession()
+          navigate('/signin')
       }
     }
   };
-
-  
-
-  
-
-  // const changeForm = () => {
-  //   setShowForm(!showForm);
-  // };
 
   return (
     <>
@@ -106,7 +114,7 @@ const SalariedForm = ({ cardType,handleClose }) => {
               <div className="col-sm-6 mb-3">
                 <div className="form-group">
                   <label className="form-label mb-2">Phone Number</label>
-                  <input type="tel" className="input" id="phone" {...register("mobileNumber")} placeholder="Enter your mobile number" />
+                  <input type="tel" className="input" id="phone" {...register("mobileNumber")} placeholder="Enter your Phone number" />
                 </div>
               </div>
               <div className="col-sm-6 mb-3">
@@ -115,20 +123,28 @@ const SalariedForm = ({ cardType,handleClose }) => {
                   <input type="text" className="input" id="pan" {...register("pan")} placeholder="ABCDE1234F" />
                 </div>
               </div>
+              <div className="col-sm-6 mb-3">
+                <div className="form-group">
+                  <label className="form-label mb-2">Service Year</label>
+                  <select className="input" id="year" {...register("itrYear", { required: true })}>
+                    {generateYears().map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                  {errors.itrYear && <span className="text-danger">This field is required</span>}
+                </div>
+              </div>
               <div className="col-sm-12 mb-3 d-flex justify-content-end">
                 <button 
                   type="submit"
-                  // onClick={changeForm}
                   className="btn btn-primary"
                 >
-                  {loading ? "Wait..." 
-                  :'Next'}
-                  
+                  {loading ? "Wait..." : 'Next'}
                 </button>
               </div>
             </>
           ) : (
-             <FileUpload setShowForm={setShowForm} handleClose={handleClose} cardType={cardType} isFieledData={isFieledData}/>
+            <FileUpload setShowForm={setShowForm} handleClose={handleClose} cardType={cardType} isFieledData={isFieledData} selectedFee={selectedFee} />
           )}
         </div>
       </form>

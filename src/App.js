@@ -18,6 +18,8 @@ import ContactUs from './pages/contact/ContactUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermCondation from './pages/TermCondation';
 import KnowledgeCenter from './pages/knowledge-center/KnowledgeCenter';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
           <Route path='*' element={<ErrorPage />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='reset-ui/reset-password' element={<ResetPassword />} />
           <Route path='/' element={<Home />} />
           <Route path='/about-us' element={<AboutUs />} />
           <Route path='/privacy-policy' element={<PrivacyPolicy />} />

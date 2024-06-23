@@ -11,7 +11,7 @@ const Footer = () => {
                         <div className="row align-items-center">
                             <div className="col-sm-3">
                                 <div className="text-sm-start">
-                                    <Link className="navbar-brand" to="/dashboard">
+                                    <Link className="navbar-brand" to="/">
                                         <h3>
                                             Tora<span className=' text-warning'>Tax</span>
                                         </h3>

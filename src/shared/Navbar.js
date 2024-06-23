@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 // import { Link, Button, Element, Events, animateScroll as scroll, scrollSpy } from 'react-scroll';
 // import NavBar from './dashboard/NavBar';
 import { getToken, removeUserSession } from '../utils/common';
@@ -38,13 +38,13 @@ const Navbar = () => {
 
       <nav class="navbar navbar-expand-lg navbar-light  " style={{ backgroundColor: "	#4384f9" }}>
         <div class="container gap-5">
-          <div to='#' class=" border-0 navbar-brand fw-bold text-decoration-none text-white"
+          <Link  to='/' class=" border-0 navbar-brand fw-bold text-decoration-none text-white"
           >
             <h3 className='text-white'>
               Tora<span className=' text-warning'>Tax</span>
             </h3>
 
-          </div>
+          </Link>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>

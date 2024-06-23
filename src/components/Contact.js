@@ -32,9 +32,9 @@ const Contact = () => {
                                         <span className="position-absolute"><FaPhone /></span> 9990670020
                                     </li>
                                     <li className="mb-4 pl-4">
-                                        <span className="position-absolute"><FaLocationDot /></span> TorTax .
-                                        <br /> Lucknow ,Uttar Pradesh ,
-                                        <br /> India
+                                        <span className="position-absolute"><FaLocationDot /></span> TorTax 
+                                        <br/>Near Vivekanand School, Bhagwatiganj, Balrampur,
+                                        <br/> UP 271201, India 
                                         <div className="mt-3"></div>
                                     </li>
                                 </ul>

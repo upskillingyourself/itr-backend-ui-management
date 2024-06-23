@@ -102,6 +102,9 @@ const SignIn = () => {
                           </div>
                         </div>
                       </div>
+                      <div className="col-12 text-end">
+                        <p className="my-2"> <Link to="/forgot-password" className="text-dark hover:text-success text-decoration-none">Forgot password?</Link></p>
+                      </div>
                       <div className="col-lg-12 mb-0">
                         <div className="d-grid">
                           <button className="btn btn-primary" disabled={loading}>{loading ? "Signing In..." : "Sign In"}</button>

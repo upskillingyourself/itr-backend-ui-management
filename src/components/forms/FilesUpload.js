@@ -2,14 +2,18 @@ import toast, { Toaster } from "react-hot-toast";
 import React, { useState } from 'react';
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { getToken } from "../../utils/common";
+import { getToken, removeUserSession } from "../../utils/common";
+import { useNavigate } from "react-router-dom";
 
-const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
-    console.log('isFieledData',isFieledData);
+const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData,selectedFee }) => {
+    
+    const navigate=useNavigate()
+    console.log('cardType',cardType,selectedFee);
     const [uploadStatus, setUploadStatus] = useState({});
+    const [isState, setState] = useState({});
     const { register, formState: { errors } } = useForm();
     const token = getToken();
-
+console.log('isState',isState);
     const documentMapping = {
         aadharDocument: { documentTypeId: 1, documentName: "Aadhar" },
         panDocument: { documentTypeId: 2, documentName: "PAN" },
@@ -46,8 +50,19 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
           setUploadStatus((prevStatus) => ({ ...prevStatus, [fieldName]: 'Upload Complete' }));
         //   toast.success("File uploaded successfully!");
         } catch (error) {
-          setUploadStatus((prevStatus) => ({ ...prevStatus, [fieldName]: 'Upload Failed' }));
-          toast.error("File upload failed. Please try again.");
+            console.log("error Error",error);
+            if (error.message==='Network Error') {
+                  removeUserSession()
+                   navigate('/signin')
+                console.log("error Network Error",error.message);
+                
+                
+            }
+            else{
+              setUploadStatus((prevStatus) => ({ ...prevStatus, [fieldName]: 'Upload Failed' }));
+
+          }
+        //   toast.error("File upload failed. Please try again.");
         }
     };
 
@@ -55,33 +70,36 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
         setShowForm(true);
     };
 
-    const handlePaymentSuccess =async (response) => {
-        console.log('response',response);
+    const handlePaymentSuccess = async (response,orderResponse) => {
+        console.log('response', response);
         toast.success("Payment successful!");
-        // const paymentData = {
-        //     razorpay_payment_id: response.razorpay_payment_id,
-        //     transactionId: response.razorpay_payment_id,
-        //     amount: response.amount,
-        //     currency: response.currency,
-        //     status: "success",
-        //     paymentBy: response.prefill.name,
-        // };
-         
-        // try {
-        //     const apiResponse = await axios.post(`${process.env.REACT_APP_API_BASE}response`, paymentData, {
-        //         headers: {
-        //             'Authorization': token,
-        //         },
-        //     });
-        //     console.log('Payment response', apiResponse);
-        //     handleClose();
-        // } catch (error) {
-        //     console.error('Error sending payment response', error);
-        //     toast.error("Failed to send payment response. Please try again.");
-        // }
-        handleClose();
-        
+    
+        const paymentData = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            transactionId: response.razorpay_payment_id,
+            amount: orderResponse.amount,
+            currency: orderResponse.currency,
+            status: "success",
+            paymentBy: isFieledData.firstName + isFieledData.lastName,
+        };
+        console.log('paymentData',paymentData);
+        setState(paymentData)
+    
+        try {
+            const apiResponse = await axios.post(`${process.env.REACT_APP_API_BASE}response`, paymentData, {
+                headers: {
+                    'Authorization': token,
+                },
+            });
+            console.log('Payment response', apiResponse);
+            handleClose();
+        } catch (error) {
+            handleClose();
+            console.error('Error sending payment response', error);
+            toast.error("Failed to send payment response. Please try again.");
+        }
     };
+    
 
     const handlePaymentFailure = (response) => {
         console.error(response);
@@ -91,7 +109,7 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
     const handleSubmit = async () => {
         var paymentAmount;
     
-        {cardType === 'Salaried' ? paymentAmount = '699': paymentAmount = '799'; }
+        {cardType === 'Salaried' ? paymentAmount = '1': paymentAmount =selectedFee.serviceFee; }
         console.log('paymentAmount',paymentAmount);
         if (typeof window.Razorpay === 'undefined') {
             toast.error("Razorpay SDK is not loaded. Please try again.");
@@ -101,31 +119,30 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
 
         const data = JSON.stringify({amount: paymentAmount})
 
-        // try {
-        //     const orderResponse = await axios.post( process.env.REACT_APP_API_BASE+`/payment/createOrder`,data,
-        //     {
-        //         headers: {
-        //             'Authorization': token,
-        //         }
+        try {
+            const orderResponse = await axios.post( process.env.REACT_APP_API_BASE+`payment/createOrder`,data,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                }
             
-        //     });
-        //     console.log('orderResponse',orderResponse);
-        //    const  orderResponse = {
-        //     paymentAmount,
-        //     order_id:1213123
-        //    }
-
+            });
+            console.log('orderResponse',orderResponse);
+       
         const options = {
-            key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-            amount: paymentAmount*100, 
+             key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+            
+            amount: paymentAmount, 
             currency: "INR",
             name: "ToraTax",
             description: "Test Transaction",
             image: "/favicon.png",
-           // order_id:orderResponse.order_id,
-            handler: handlePaymentSuccess,
+            order_id:orderResponse.data.id,
+            handler: (response) => handlePaymentSuccess(response, orderResponse.data),
+            
             prefill: {
-                name: isFieledData.firstName + isFieledData.lastName,
+                name:isFieledData.firstname,
                 email: isFieledData.emailId,
                 contact: isFieledData.mobileNumber,
             },
@@ -140,10 +157,12 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
         const rzp1 = new window.Razorpay(options);
         rzp1.on("payment.failed", handlePaymentFailure);
         rzp1.open();
-    // } catch (error) {
-    //     console.error(error);
-    //     toast.error("Unable to create order. Please try again.");
-    // }
+    } catch (error) {
+        console.error(error);
+        toast.error("Unable to create order. Please try again.");
+        removeUserSession()
+        navigate('/signin')
+    }
      };
 
     return (
@@ -153,9 +172,27 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData }) => {
                 <div className="col-sm-6 mb-3" key={fieldName}>
                     <div className="form-group">
                         <label className="form-label mb-2" htmlFor={fieldName}>{documentMapping[fieldName].documentName}</label>
-                        <input type="file" className="file" id={fieldName} {...register(fieldName)} />
+                        <input type="file" className="form-contol" id={fieldName} {...register(fieldName)} />
                         <button type="button" className="btn btn-secondary mt-2" onClick={() => handleUpload(fieldName)}>Upload</button>
-                        {uploadStatus[fieldName] && <small className="form-text text-muted">{uploadStatus[fieldName]}</small>}
+                        {uploadStatus[fieldName] && (
+                            <div className="mt-2">
+                                {uploadStatus[fieldName] === 'Uploading...' && (
+                                    <div className="alert alert-warning" role="alert">
+                                        Uploading...
+                                    </div>
+                                )}
+                                {uploadStatus[fieldName] === 'Upload Complete' && (
+                                    <div className="alert alert-success" role="alert">
+                                        Upload Complete
+                                    </div>
+                                )}
+                                {uploadStatus[fieldName] === 'Upload Failed' && (
+                                    <div className="alert alert-danger" role="alert">
+                                        Upload Failed
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             ))}

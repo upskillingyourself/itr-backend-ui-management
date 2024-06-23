@@ -9,84 +9,107 @@ import { BiSolidEdit } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { getToken } from '../../utils/common';
+import { getToken, removeUserSession } from '../../utils/common';
 import { GrDocumentImage } from "react-icons/gr";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { LiaEdit } from "react-icons/lia";
 import DocumentShowModal from '../../components/Modals/DocumentShowModal';
+import Moment from 'react-moment';
+import { MdOutlineEdit } from "react-icons/md";
+import { RiSecurePaymentFill ,RiSecurePaymentLine} from "react-icons/ri";
+import AdminProfile from './AdminProfile/AdminProfile';
 
-const jsonData = [
-  {
-    "id": 1,
-    "name": "Karan Sharma",
-    "type": "Salried",
-    "location": "Noida, UP 6654",
-    "date": "15/04/2024"
-  },
-  {
-    "id": 2,
-    "name": "Preeti Singh",
-    "type": "Non-Salried",
-    "location": "Delhi",
-    "date": "01/04/2024"
-  },
-  {
-    "id": 3,
-    "name": "John Doe",
-    "type": "Freelancer",
-    "location": "New York",
-    "date": "12/05/2024"
-  },
-  {
-    "id": 4,
-    "name": "Emily Smith",
-    "type": "Salried",
-    "location": "Los Angeles",
-    "date": "20/04/2024"
-  },
-  {
-    "id": 5,
-    "name": "David Johnson",
-    "type": "Non-Salried",
-    "location": "Chicago",
-    "date": "05/05/2024"
-  }
-]
+// const jsonData = [
+//   {
+//     "id": 1,
+//     "name": "Karan Sharma",
+//     "type": "Salried",
+//     "location": "Noida, UP 6654",
+//     "date": "15/04/2024"
+//   },
+//   {
+//     "id": 2,
+//     "name": "Preeti Singh",
+//     "type": "Non-Salried",
+//     "location": "Delhi",
+//     "date": "01/04/2024"
+//   },
+//   {
+//     "id": 3,
+//     "name": "John Doe",
+//     "type": "Freelancer",
+//     "location": "New York",
+//     "date": "12/05/2024"
+//   },
+//   {
+//     "id": 4,
+//     "name": "Emily Smith",
+//     "type": "Salried",
+//     "location": "Los Angeles",
+//     "date": "20/04/2024"
+//   },
+//   {
+//     "id": 5,
+//     "name": "David Johnson",
+//     "type": "Non-Salried",
+//     "location": "Chicago",
+//     "date": "05/05/2024"
+//   }
+// ]
 
-const rtr_requests = [
-  {
-    "request_id": "RTR2024-001",
-    "request_date": "2024-04-15",
-    "document_type": "Tax Return",
-    "status": "Completed",
-    "processing_time": "3 days",
-    "outcome": "Successfully filed",
-    "filing_reference_number": "FIL2024-001",
-    "comments": "Client provided all necessary documents.",
-    "follow_up_action": "",
-    "contact_person": "John Doe",
-    "payment_status": "Paid"
+// const rtr_requests = [
+//   {
+//     "request_id": "RTR2024-001",
+//     "request_date": "2024-04-15",
+//     "document_type": "Tax Return",
+//     "status": "Completed",
+//     "processing_time": "3 days",
+//     "outcome": "Successfully filed",
+//     "filing_reference_number": "FIL2024-001",
+//     "comments": "Client provided all necessary documents.",
+//     "follow_up_action": "",
+//     "contact_person": "John Doe",
+//     "payment_status": "Paid"
+//   },
+//   {
+//     "request_id": "RTR2024-002",
+//     "request_date": "2024-04-28",
+//     "document_type": "Financial Statement",
+//     "status": "Pending",
+//     "processing_time": "",
+//     "outcome": "",
+//     "filing_reference_number": "",
+//     "comments": "Awaiting additional documents from the client.",
+//     "follow_up_action": "Sent reminder email to the client.",
+//     "contact_person": "Jane Smith",
+//     "payment_status": "Pending"
+//   }
+// ]
+
+ // Define style objects
+ const styles = {
+  pendingPayment: {
+    backgroundColor: '#fcd1d1',
+    color: 'darkred',
+    borderRadius:'12px ',
+    padding:'5px',
+    fontWeight:'500'
+    
   },
-  {
-    "request_id": "RTR2024-002",
-    "request_date": "2024-04-28",
-    "document_type": "Financial Statement",
-    "status": "Pending",
-    "processing_time": "",
-    "outcome": "",
-    "filing_reference_number": "",
-    "comments": "Awaiting additional documents from the client.",
-    "follow_up_action": "Sent reminder email to the client.",
-    "contact_person": "Jane Smith",
-    "payment_status": "Pending"
-  }
-]
+  successPayment: {
+    backgroundColor: 'lightgreen',
+    color: 'darkgreen'
+  },
+ 
+};
 
 const Profile = () => {
   const navigate=useNavigate();
   const [loading, setLoading] = useState(false);
   const [isUserData, setUserData] = useState();
+  const [isAdminData, setAdminData] = useState([]);
+  const [isUserItrInfo, setUserItrInfo] = useState([]);
   const [isUser, setUser] = useState({});
   const [show, setShow] = useState(false);
 console.log('isUser',isUser);
@@ -98,18 +121,14 @@ console.log('isUser',isUser);
   const role = Cookies.get('role')
   const userName = Cookies.get('userName')
   const token = getToken();
-
   console.log('role',role);
   useEffect( ()=>{
-    if(role==='admin'){
+    userItrInfo()
+    if(role==='ADMIN'){
       adminData()
-
     }else{
       userData()
     }
-    
-    
-
   },[])
 
   const userData = async()=>{
@@ -133,19 +152,84 @@ console.log('isUser',isUser);
       } else {
         toast.error("Network Error");
         console.error(error);
-        // navigate('/signin')
+        removeUserSession()
+         navigate('/signin')
       }
     }
   }
 
+  const userItrInfo = async()=>{
+    try {
+    const response = await axios.get(process.env.REACT_APP_API_BASE + `user/${userName}/itrinfo`,
+    {
+      headers: {
+        'Authorization': token,
+      },
+    }
+    );
+    
+    setUserItrInfo(response.data)
+    // setUser(response.data)
+    console.log('itrrequest userItrInfo',response.data);
+    // toast.success("get Successfully!");
+  } catch (error) {
+    setLoading(false);
+    if (error.response && error.response.status===404) {
+      toast.error("Data NOT FOUND!");
+    } else {
+      toast.error("Network Error");
+      console.error(error);
+      // navigate('/signin')
+    }
+  }
+}
+
+
+
+
   const adminData= async()=>{
 
+  try {
+      const response = await axios.get(process.env.REACT_APP_API_BASE + `users`,
+      {
+        headers: {
+          'Authorization': token,
+        },
+      }
+      );
+      setLoading(false);
+       setAdminData(response.data)
+      // setUser(response.data)
+      console.log('itrrequest response',response.data);
+      // toast.success("get Successfully!");
+    } catch (error) {
+      setLoading(false);
+      if (error.response && error.response.status===404) {
+        toast.error("Data NOT FOUND!");
+      } else {
+        toast.error("Network Error");
+        console.error(error);
+        removeUserSession()
+         navigate('/signin')
+      }
+    }
   }
  
   const handleClose = () => setShow(false);
   const handleShow = () => {
       
        setShow(true);
+  };
+  // Function to determine style based on payment status
+  const getPaymentStatusStyle = (status) => {
+    switch (status) {
+      case 'PENDING':
+        return styles.pendingPayment;
+      case 'SUCCESS':
+        return styles.successPayment;
+      default:
+        return {};
+    }
   };
   return (
     <>
@@ -217,69 +301,27 @@ console.log('isUser',isUser);
                       
                     </div>
                     <div className="table-responsive bg-white shadow rounded mt-4">
-                      {role==='admin'?
-                     
-                      <table className="table mb-0 table-center">
-                        <thead className="bg-light">
-                          <tr>
-                            <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>User ID</th>
-                            <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>Requested Year </th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Payment Status</th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comment</th>
-                            <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Action</th>
-                         
-                           
-                          </tr>
-                        </thead>
-                        <tbody>
-                        
-                          
-                          {isUserData?  rtr_requests.map((item, index) => (
-                            <tr key={index}>
-                              <td className="p-3">{index + 1}</td>
-                              <td className="p-3">
-                                <div className="d-flex">
-                                  <span className="text-muted h5"><FaClipboardList /></span>
-                                  <div className="flex-1 content ms-3">
-                                    <p className="text-primary fw-bold mb-0"> 
-                                    {/* {isUserData.yearlyDataDetails.itrYear} */}
-                                    {isUserData && isUserData.itrYear}
-                                    </p>
-                                    {/* <p className="text-muted small mb-1">Document Type: {item.document_type}</p> */}
-                                    
-                                  </div>
-                                </div>
+                      {role==='ADMIN'?
+                      //  admin table
+                      <>
+                      <h4 className='px-3 pt-2'>Users :</h4>
+                      <AdminProfile isAdminData={isAdminData} />
+                      </>
+                   
 
-                              </td>
-                              <td className="text-center small p-3 text-muted">{item.request_date}</td>
-                              <td className="text-center small p-3 text-muted">{item.status}</td>
-                            
-                             
-                            </tr>
-                          ))
-                        
-                        :
-                        <tr>
-                        <td>
-                         <h5> data not avilable </h5>
-
-                        </td>
-                      </tr>
-                        }
-
-
-                        </tbody>
-                      </table>
                       :
+
+                      // user table
                       <table className="table mb-0 table-center">
                       <thead className="bg-light">
                         <tr>
                           <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
                           <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
+                          <th scope="col" className="border-bottom p-3 text-center " style={{ maxWidth: "150px" }}>Service Year</th>
                           {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th> */}
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
                          
-                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th>
+                          {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th> */}
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Action</th>
                          
@@ -288,7 +330,7 @@ console.log('isUser',isUser);
                       <tbody>
                       
                         
-                        { isUserData ? rtr_requests.map((item, index) => (
+                        { isUserItrInfo.length ? isUserItrInfo.map((item, index) => (
                           <tr key={index}>
                             <td className="p-3">{index + 1}</td>
                             <td className="p-3">
@@ -297,7 +339,10 @@ console.log('isUser',isUser);
                                 <div className="flex-1 content ms-3">
                                   <p className="text-primary fw-bold mb-0"> 
                                   {/* {isUserData.yearlyDataDetails.itrYear} */}
-                                  {isUserData && isUserData.itrYear}
+                                  
+                                  <Moment format="YYYY/MM/DD">
+                                      {item.requestedDate}
+                                  </Moment>
                                   </p>
                                   {/* <p className="text-muted small mb-1">Document Type: {item.document_type}</p> */}
                                   
@@ -305,19 +350,35 @@ console.log('isUser',isUser);
                               </div>
 
                             </td>
+                            <td className="text-center small p-3 text-muted fw-bold">
+                              {item.serviceYear}
+                            </td>
                             {/* <td className="text-center small p-3 text-muted">{item.request_date}</td> */}
-                            <td className="text-center small p-3 text-muted">{item.status}</td>
+                            <td className="text-center small p-3 text-muted fw-bold text-capitalize">{item.itrFillingStatus}</td>
                             
-                            <td className="text-center small p-3 text-muted">{item.comments}</td>
-                            <td className="text-center small p-3 text-muted">{item.payment_status}</td>
+                            {/* <td className="text-center small p-3 text-muted">empty <span role="button"><MdOutlineEdit/></span></td> */}
+                            <td className="text-center small p-3 text-muted ">
+                              <span  style={getPaymentStatusStyle(item.paymentStatus)}>
+                                <span className='ms-2'>
+                                  
+                                  {item.paymentStatus}
+                                  </span>
+                                 {/* {item.paymentStatus === 'PENDING' ? <RiSecurePaymentFill  className='fs-4 text-primary' />:<RiSecurePaymentLine className='fs-4 text-success' />}
+                                  */}
+                                  <span  className='me-2'>
+                               {item.paymentStatus === 'PENDING' ? <RiSecurePaymentFill className='fs-5 ms-2' />:<RiSecurePaymentLine className='fs-5'/>}
+
+                                  </span>
+                              </span>   
+                            </td>
                             <td className="text-center small p-3 text-muted">
                               <div className='d-flex gap-3 justify-content-center align-items-center '>
                                 <div  className='cursor-pointer' onClick={() => handleShow(index)}>
-                              <GrDocumentImage className='text-warning fs-5'/>
+                                  <GrDocumentImage className='text-warning fs-5' role="button"/>
                                 </div>
                                   
                                {/* <LiaEdit className='text-success '/> */}
-                               <AiOutlineDelete className='text-danger fs-4'/>
+                               <AiOutlineDelete className='text-danger fs-4' role="button"/>
 
 
                               </div>

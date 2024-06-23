@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Cards from '../pages/home/Cards'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const Hero = () => {
+
+   
   return (
     <div>
         <section className='py-5 ' id='home' style={{ backgroundColor: "rgba(244, 247, 250)" }}>

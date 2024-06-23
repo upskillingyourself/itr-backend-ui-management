@@ -5,7 +5,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const HeroModal = ({ show, handleClose, cardType }) => {
+const HeroModal = ({ show, handleClose, cardType,selectedFee }) => {
+  
   const { register, handleSubmit, setValue } = useForm();
   const [panFile, setPanFile] = useState();
 
@@ -28,7 +29,7 @@ const HeroModal = ({ show, handleClose, cardType }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <SalariedForm cardType={cardType} handleClose={handleClose}/>
+        <SalariedForm cardType={cardType} handleClose={handleClose} selectedFee={selectedFee}/>
 
 
 

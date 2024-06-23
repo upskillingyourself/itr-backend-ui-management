@@ -4,6 +4,8 @@ import { IoLocationOutline } from "react-icons/io5";
 import { FiPhone } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaLocationDot } from 'react-icons/fa6';
 const ContactUs = () => {
 
     const {
@@ -57,7 +59,7 @@ const ContactUs = () => {
                             </div>
                             <div class="content mt-4">
                                 <h5 class="fw-bold">Location</h5>
-                                <p class="text-muted">Lucknow,Uttar Pradesh ,<br/> India </p>
+                                <p class="text-muted">Near Vivekanand School, Bhagwatiganj, Balrampur,<br/> UP 271201, India </p>
                                 <Link href="#"
                                     data-type="iframe" class="">View on Google map</Link>
                             </div>
@@ -73,7 +75,21 @@ const ContactUs = () => {
                             <div class="card-body py-5">
                                 <h4 class="card-title">Get In Touch !</h4>
                                 <div class="custom-form mt-3">
-                                    <form name="myForm" id="myForm" onSubmit={handleSubmit(onSubmit)}>
+                                <ul className="contact-info__list list-style--none position-relative z-index-101">
+                                    <li className="mb-4 pl-4">
+                                        <span className="position-absolute"><FaEnvelope /></span> support@toratax.com
+                                    </li>
+                                    <li className="mb-4 pl-4">
+                                        <span className="position-absolute"><FaPhone /></span> 9990670020
+                                    </li>
+                                    <li className="mb-4 pl-4">
+                                        <span className="position-absolute"><FaLocationDot /></span> TorTax 
+                                        <br/>Near Vivekanand School, Bhagwatiganj, Balrampur,
+                                        <br/> UP 271201, India 
+                                        <div className="mt-3"></div>
+                                    </li>
+                                </ul>
+                                    {/* <form name="myForm" id="myForm" onSubmit={handleSubmit(onSubmit)}>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
@@ -124,7 +140,7 @@ const ContactUs = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                    </form> */}
                                 </div>
                             </div>
                         </div>
