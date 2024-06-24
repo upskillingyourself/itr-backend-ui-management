@@ -112,8 +112,8 @@ const Profile = () => {
   const [isUserItrInfo, setUserItrInfo] = useState([]);
   const [isUser, setUser] = useState({});
   const [show, setShow] = useState(false);
-console.log('isUser',isUser);
- console.log('isUserData',isUserData);
+// console.log('isUser',isUser);
+//  console.log('isUserData',isUserData);
   const firstName = Cookies.get('firstName')
   const lastName = Cookies.get('lastName')
   const emailId = Cookies.get('emailId')
@@ -121,7 +121,7 @@ console.log('isUser',isUser);
   const role = Cookies.get('role')
   const userName = Cookies.get('userName')
   const token = getToken();
-  console.log('role',role);
+  // console.log('role',role);
   useEffect( ()=>{
     userItrInfo()
     if(role==='ADMIN'){
@@ -143,7 +143,7 @@ console.log('isUser',isUser);
       setLoading(false);
       setUserData(response.data.yearlyDataDetails)
       setUser(response.data)
-      console.log('itrrequest response',response.data);
+      // console.log('itrrequest response',response.data);
       // toast.success("get Successfully!");
     } catch (error) {
       setLoading(false);
@@ -170,7 +170,7 @@ console.log('isUser',isUser);
     
     setUserItrInfo(response.data)
     // setUser(response.data)
-    console.log('itrrequest userItrInfo',response.data);
+    //console.log('itrrequest userItrInfo',response.data);
     // toast.success("get Successfully!");
   } catch (error) {
     setLoading(false);

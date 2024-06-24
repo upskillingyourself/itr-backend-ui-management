@@ -86,7 +86,7 @@ console.log('isState',isState);
         setState(paymentData)
     
         try {
-            const apiResponse = await axios.post(`${process.env.REACT_APP_API_BASE}response`, paymentData, {
+            const apiResponse = await axios.post(`${process.env.REACT_APP_API_BASE}payment/response`, paymentData, {
                 headers: {
                     'Authorization': token,
                 },
@@ -110,7 +110,7 @@ console.log('isState',isState);
         var paymentAmount;
     
         {cardType === 'Salaried' ? paymentAmount = '1': paymentAmount =selectedFee.serviceFee; }
-        console.log('paymentAmount',paymentAmount);
+       // console.log('paymentAmount',paymentAmount);
         if (typeof window.Razorpay === 'undefined') {
             toast.error("Razorpay SDK is not loaded. Please try again.");
             return;

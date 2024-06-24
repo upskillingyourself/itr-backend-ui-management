@@ -4,7 +4,7 @@ import Accordian from './ui/Accordian'
 
 const Faq = () => {
   return (
-    <section id='faq'className="py-5 bg-light ftco-faqs"  >
+    <section id='faq'className="py-5 bg-light ftco-faqs"  style={{minHeight:"100vh"}} >
       <div class="container" 
       // style={{marginTop:"80px",marginBottom:"80px"}}
       >
