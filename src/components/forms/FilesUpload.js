@@ -9,6 +9,7 @@ const FileUpload = ({ cardType,setShowForm, handleClose,isFieledData,selectedFee
     
     const navigate=useNavigate()
     console.log('cardType',cardType,selectedFee);
+    console.log('isFieledData',isFieledData);
     const [uploadStatus, setUploadStatus] = useState({});
     const [isState, setState] = useState({});
     const { register, formState: { errors } } = useForm();
@@ -32,7 +33,7 @@ console.log('isState',isState);
         }
 
         const documentInfo = documentMapping[fieldName];
-        var info = JSON.stringify({ typeId: documentInfo.documentTypeId })
+        var info = JSON.stringify({ typeId: documentInfo.documentTypeId,year:isFieledData.itrYear })
         const formData = new FormData();
         formData.append('document', selectedFile);
         formData.append('info', info);
@@ -81,6 +82,7 @@ console.log('isState',isState);
             currency: orderResponse.currency,
             status: "success",
             paymentBy: isFieledData.firstName + isFieledData.lastName,
+            transactionForYear:isFieledData.itrYear
         };
         console.log('paymentData',paymentData);
         setState(paymentData)

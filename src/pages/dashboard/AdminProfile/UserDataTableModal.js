@@ -13,6 +13,7 @@ import DocumentShowModal from '../../../components/Modals/DocumentShowModal'
 
 const UserDataTableModal = ({ showModal, handleCloseUserModal,user}) => {
   const [isUserItrInfo, setUserItrInfo] = useState([]);
+  const [isUserDocumentDetails, setUserDocumentDetails] = useState();
   const [show, setShow] = useState(false);
 
   const [isUser, setUser] = useState({});
@@ -39,6 +40,7 @@ const UserDataTableModal = ({ showModal, handleCloseUserModal,user}) => {
     );
     //setLoading(false);
     setUserData(response.data.yearlyDataDetails)
+    
     setUser(response.data)
     console.log('itrrequest response',response.data);
     // toast.success("get Successfully!");
@@ -66,6 +68,7 @@ const UserDataTableModal = ({ showModal, handleCloseUserModal,user}) => {
     );
     
     setUserItrInfo(response.data)
+    setUserDocumentDetails(response.data.yearlyDataDetails)
     // setUser(response.data)
     console.log('itrrequest userItrInfo',response.data);
     // toast.success("get Successfully!");
@@ -220,7 +223,7 @@ const styles = {
           </Button>
         </Modal.Footer> */}
     </Modal>
-    <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails}/>
+    <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails} yearlyDataDetails={isUser.yearlyDataDetails}/>
     </div>
   )
 }

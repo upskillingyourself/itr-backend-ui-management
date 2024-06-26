@@ -413,7 +413,7 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails}/>
+      <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails} yearlyDataDetails={isUser.yearlyDataDetails}/>
     </>
   )
 }

@@ -56,7 +56,7 @@ const SalariedForm = ({ cardType, handleClose,selectedFee }) => {
       userId: userName,
     };
     // setLoading(true);
-    console.log('alldata',allData);
+    // console.log('alldata',allData);
     // setFieledData(allData);
     // setShowForm(!showForm);
     try {

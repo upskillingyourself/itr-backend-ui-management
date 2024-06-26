@@ -7,9 +7,8 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getToken } from '../../utils/common';
 
-const DocumentShowModal = ({ show, handleClose, permanentDataDetails }) => {
+const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyDataDetails }) => {
     const [documents, setDocuments] = useState([]);
-    console.log(documents);
     const token = getToken();
 
     useEffect(() => {
@@ -63,8 +62,6 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails }) => {
         }
     };
 
-    
-
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             Download
@@ -82,9 +79,26 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails }) => {
     const handleMouseLeave = (e) => {
         e.currentTarget.style.backgroundColor = '';
     };
-            const handleUpload =()=>{
-                // handleClose()
-            }
+
+    const handleUpload = () => {
+        // handleClose()
+    }
+
+    const getDocumentDetails = (docTypeId) => {
+        let details = null;
+        if (permanentDataDetails) {
+            details = permanentDataDetails.permanentDocuments.find(permDoc => permDoc.documentTypeId === docTypeId);
+        }
+        if (!details && yearlyDataDetails) {
+            yearlyDataDetails.forEach(yearlyData => {
+                if (!details) {
+                    details = yearlyData.documentDetails.find(yearlyDoc => yearlyDoc.documentTypeId === docTypeId);
+                }
+            });
+        }
+        return details;
+    }
+
     return (
         <Modal
             size="md"
@@ -108,7 +122,7 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails }) => {
                     </thead>
                     <tbody>
                         {documents.map((doc) => {
-                            const matchedDocument = permanentDataDetails && permanentDataDetails.permanentDocuments.find(permDoc => permDoc.documentTypeId === doc.documentTypeId);
+                            const matchedDocument = getDocumentDetails(doc.documentTypeId);
                             if (matchedDocument) {
                                 return (
                                     <tr
@@ -117,40 +131,33 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails }) => {
                                         onMouseEnter={handleMouseEnter}
                                         onMouseLeave={handleMouseLeave}
                                     >
-                                       
-                                    <td className='text-capitalize'>{ doc.documentName}</td>
-                                        
-                                        <td >
-                                          <div className='text-center gap-2 text-white bg-success px-1 py-1 rounded-pill' role='button' onClick={() => handleDownload(matchedDocument.documentTypeId, matchedDocument.documentId, matchedDocument.documentName, matchedDocument.documentPath)}>
-                                            Download &nbsp;
-
-                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
-                                                <IoCloudDownload
-                                                    role='button'
-                                                    size={24}
-                                                    className='text-white cursor-pointer'
-                                                   
+                                        <td className='text-capitalize'>{doc.documentName}</td>
+                                        <td>
+                                            <div className='text-center gap-2 text-white bg-success px-1 py-1 rounded-pill' role='button' onClick={() => handleDownload(matchedDocument.documentTypeId, matchedDocument.documentId, matchedDocument.documentName, matchedDocument.documentPath)}>
+                                                Download &nbsp;
+                                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                    <IoCloudDownload
+                                                        role='button'
+                                                        size={24}
+                                                        className='text-white cursor-pointer'
                                                     />
-                                            </OverlayTrigger>
+                                                </OverlayTrigger>
                                             </div>
                                         </td>
                                     </tr>
                                 );
                             } else {
-                                // Document exists in `documents` but not in `permanentDataDetails.permanentDocuments`
                                 return (
                                     <tr key={doc.documentTypeId} style={rowStyle}>
                                         <td className='text-capitalize fw-normal'>{doc.documentName}</td>
                                         <td>
-                                            <div  className='text-center gap-2 text-white px-3 py-1 rounded-pill bg-danger' role='button' onClick={() => handleUpload()}>
-
-                                                 Not Uploaded &nbsp;
-                                                 <IoCloudUpload
+                                            <div className='text-center gap-2 text-white px-3 py-1 rounded-pill bg-danger' role='button' onClick={handleUpload}>
+                                                Not Uploaded &nbsp;
+                                                <IoCloudUpload
                                                     role='button'
                                                     size={24}
-                                                    className='text-white '
-                                                     
-                                                    /> 
+                                                    className='text-white'
+                                                />
                                             </div>
                                         </td>
                                     </tr>
