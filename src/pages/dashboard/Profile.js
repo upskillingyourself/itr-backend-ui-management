@@ -99,7 +99,10 @@ import AdminProfile from './AdminProfile/AdminProfile';
   },
   successPayment: {
     backgroundColor: 'lightgreen',
-    color: 'darkgreen'
+    color: 'darkgreen',
+    borderRadius:'12px ',
+    padding:'5px',
+    fontWeight:'500'
   },
  
 };

@@ -73,7 +73,7 @@ console.log('isState',isState);
 
     const handlePaymentSuccess = async (response,orderResponse) => {
         console.log('response', response);
-        toast.success("Payment successful!");
+        // toast.success("Payment successful!");
     
         const paymentData = {
             razorpay_payment_id: response.razorpay_payment_id,
