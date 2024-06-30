@@ -7,13 +7,8 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getToken } from '../../utils/common';
 
-const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyDataDetails ,isYear}) => {
-
-   
-    console.log('yearlyDataDetails',yearlyDataDetails,permanentDataDetails,isYear);
+const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyDataDetails }) => {
     const [documents, setDocuments] = useState([]);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [uploadStatus, setUploadStatus] = useState({});
     const token = getToken();
 
     useEffect(() => {
@@ -67,36 +62,6 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyData
         }
     };
 
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-    };
-
-    const handleUpload = async (docTypeId) => {
-        if (!selectedFile) {
-            alert("No file selected");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('document', selectedFile);
-        formData.append('info', JSON.stringify({ typeId: docTypeId ,year:isYear}));
-
-        try {
-            setUploadStatus((prevStatus) => ({ ...prevStatus, [docTypeId]: 'Uploading...' }));
-            const response = await axios.post(process.env.REACT_APP_API_BASE + "fileupload", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': token,
-                },
-            });
-            console.log('fileupload', response);
-            setUploadStatus((prevStatus) => ({ ...prevStatus, [docTypeId]: 'Upload Complete' }));
-        } catch (error) {
-            console.error("Error uploading file:", error);
-            setUploadStatus((prevStatus) => ({ ...prevStatus, [docTypeId]: 'Upload Failed' }));
-        }
-    };
-
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
             Download
@@ -115,6 +80,10 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyData
         e.currentTarget.style.backgroundColor = '';
     };
 
+    const handleUpload = () => {
+        // handleClose()
+    }
+
     const getDocumentDetails = (docTypeId) => {
         let details = null;
         if (permanentDataDetails) {
@@ -128,7 +97,7 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyData
             });
         }
         return details;
-    };
+    }
 
     return (
         <Modal
@@ -182,31 +151,13 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyData
                                     <tr key={doc.documentTypeId} style={rowStyle}>
                                         <td className='text-capitalize fw-normal'>{doc.documentName}</td>
                                         <td>
-                                            <div className='d-flex flex-column '>
-                                                <input type="file" onChange={handleFileChange} />
-                                                <button className='btn btn-primary btn-sm mt-2' onClick={() => handleUpload(doc.documentTypeId)}>
-                                                    Upload &nbsp;
-                                                    <IoCloudUpload size={24} />
-                                                </button>
-                                                {uploadStatus[doc.documentTypeId] && (
-                                                    <div className="mt-2">
-                                                        {uploadStatus[doc.documentTypeId] === 'Uploading...' && (
-                                                            <div className="alert alert-warning" role="alert">
-                                                                Uploading...
-                                                            </div>
-                                                        )}
-                                                        {uploadStatus[doc.documentTypeId] === 'Upload Complete' && (
-                                                            <div className="alert alert-success" role="alert">
-                                                                Upload Complete
-                                                            </div>
-                                                        )}
-                                                        {uploadStatus[doc.documentTypeId] === 'Upload Failed' && (
-                                                            <div className="alert alert-danger" role="alert">
-                                                                Upload Failed
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
+                                            <div className='text-center gap-2 text-white px-3 py-1 rounded-pill bg-danger' role='button' onClick={handleUpload}>
+                                                Not Uploaded &nbsp;
+                                                <IoCloudUpload
+                                                    role='button'
+                                                    size={24}
+                                                    className='text-white'
+                                                />
                                             </div>
                                         </td>
                                     </tr>

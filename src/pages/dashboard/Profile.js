@@ -17,8 +17,9 @@ import { LiaEdit } from "react-icons/lia";
 import DocumentShowModal from '../../components/Modals/DocumentShowModal';
 import Moment from 'react-moment';
 import { MdOutlineEdit } from "react-icons/md";
-import { RiSecurePaymentFill ,RiSecurePaymentLine} from "react-icons/ri";
+import { RiSecurePaymentFill, RiSecurePaymentLine } from "react-icons/ri";
 import AdminProfile from './AdminProfile/AdminProfile';
+import Payment from '../../components/Payment/Payment';
 
 // const jsonData = [
 //   {
@@ -87,36 +88,37 @@ import AdminProfile from './AdminProfile/AdminProfile';
 //   }
 // ]
 
- // Define style objects
- const styles = {
+// Define style objects
+const styles = {
   pendingPayment: {
     backgroundColor: '#fcd1d1',
     color: 'darkred',
-    borderRadius:'12px ',
-    padding:'5px',
-    fontWeight:'500'
-    
+    borderRadius: '12px ',
+    padding: '5px',
+    fontWeight: '500'
+
   },
   successPayment: {
     backgroundColor: 'lightgreen',
     color: 'darkgreen',
-    borderRadius:'12px ',
-    padding:'5px',
-    fontWeight:'500'
+    borderRadius: '12px ',
+    padding: '5px',
+    fontWeight: '500'
   },
- 
+
 };
 
 const Profile = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const [isYear,setIsYear]=useState()
   const [loading, setLoading] = useState(false);
   const [isUserData, setUserData] = useState();
   const [isAdminData, setAdminData] = useState([]);
   const [isUserItrInfo, setUserItrInfo] = useState([]);
   const [isUser, setUser] = useState({});
   const [show, setShow] = useState(false);
-// console.log('isUser',isUser);
-//  console.log('isUserData',isUserData);
+  // console.log('isUser',isUser);
+  //  console.log('isUserData',isUserData);
   const firstName = Cookies.get('firstName')
   const lastName = Cookies.get('lastName')
   const emailId = Cookies.get('emailId')
@@ -125,23 +127,23 @@ const Profile = () => {
   const userName = Cookies.get('userName')
   const token = getToken();
   // console.log('role',role);
-  useEffect( ()=>{
+  useEffect(() => {
     userItrInfo()
-    if(role==='ADMIN'){
+    if (role === 'ADMIN') {
       adminData()
-    }else{
+    } else {
       userData()
     }
-  },[])
+  }, [])
 
-  const userData = async()=>{
-      try {
+  const userData = async () => {
+    try {
       const response = await axios.get(process.env.REACT_APP_API_BASE + `userdata/${userName}`,
-      {
-        headers: {
-          'Authorization': token,
-        },
-      }
+        {
+          headers: {
+            'Authorization': token,
+          },
+        }
       );
       setLoading(false);
       setUserData(response.data.yearlyDataDetails)
@@ -150,78 +152,79 @@ const Profile = () => {
       // toast.success("get Successfully!");
     } catch (error) {
       setLoading(false);
-      if (error.response && error.response.status===404) {
+      if (error.response && error.response.status === 404) {
         toast.error("Data NOT FOUND!");
       } else {
         toast.error("Network Error");
         console.error(error);
         removeUserSession()
-         navigate('/signin')
+        navigate('/signin')
       }
     }
   }
 
-  const userItrInfo = async()=>{
+  const userItrInfo = async () => {
     try {
-    const response = await axios.get(process.env.REACT_APP_API_BASE + `user/${userName}/itrinfo`,
-    {
-      headers: {
-        'Authorization': token,
-      },
-    }
-    );
-    
-    setUserItrInfo(response.data)
-    // setUser(response.data)
-    //console.log('itrrequest userItrInfo',response.data);
-    // toast.success("get Successfully!");
-  } catch (error) {
-    setLoading(false);
-    if (error.response && error.response.status===404) {
-      toast.error("Data NOT FOUND!");
-    } else {
-      toast.error("Network Error");
-      console.error(error);
-      // navigate('/signin')
-    }
-  }
-}
-
-
-
-
-  const adminData= async()=>{
-
-  try {
-      const response = await axios.get(process.env.REACT_APP_API_BASE + `users`,
-      {
-        headers: {
-          'Authorization': token,
-        },
-      }
+      const response = await axios.get(process.env.REACT_APP_API_BASE + `user/${userName}/itrinfo`,
+        {
+          headers: {
+            'Authorization': token,
+          },
+        }
       );
-      setLoading(false);
-       setAdminData(response.data)
+
+      setUserItrInfo(response.data)
       // setUser(response.data)
-      console.log('itrrequest response',response.data);
+      //console.log('itrrequest userItrInfo',response.data);
       // toast.success("get Successfully!");
     } catch (error) {
       setLoading(false);
-      if (error.response && error.response.status===404) {
+      if (error.response && error.response.status === 404) {
+        toast.error("Data NOT FOUND!");
+      } else {
+        toast.error("Network Error");
+        console.error(error);
+        // navigate('/signin')
+      }
+    }
+  }
+
+
+
+
+  const adminData = async () => {
+
+    try {
+      const response = await axios.get(process.env.REACT_APP_API_BASE + `users`,
+        {
+          headers: {
+            'Authorization': token,
+          },
+        }
+      );
+      setLoading(false);
+      setAdminData(response.data)
+      // setUser(response.data)
+      console.log('itrrequest response', response.data);
+      // toast.success("get Successfully!");
+    } catch (error) {
+      setLoading(false);
+      if (error.response && error.response.status === 404) {
         toast.error("Data NOT FOUND!");
       } else {
         toast.error("Network Error");
         console.error(error);
         removeUserSession()
-         navigate('/signin')
+        navigate('/signin')
       }
     }
   }
- 
+
   const handleClose = () => setShow(false);
-  const handleShow = () => {
-      
-       setShow(true);
+  const handleShow = (item) => {
+    console.log('setIsYear',item.serviceYear);
+    setIsYear(item.serviceYear)
+    setShow(true);
   };
   // Function to determine style based on payment status
   const getPaymentStatusStyle = (status) => {
@@ -234,12 +237,147 @@ const Profile = () => {
         return {};
     }
   };
+
+
+
+  // Payment
+
+  const [filteredData, setFilteredData] = useState(null);
+  console.log('filteredData',filteredData);
+  
+  useEffect(() => {
+   
+  }, []);
+    const handleSubmit = async (item) => {
+      console.log('item',item);
+      console.log('isUserItrInfo',isUserItrInfo);
+      console.log('isUser',isUser);
+
+      const serviceYear = item.serviceYear;
+
+      const filteredYearlyDataDetails = isUser.yearlyDataDetails.filter(
+        yearlyData => yearlyData.itrYear === serviceYear
+      );
+      const newFilteredData = {
+        permanentDataDetails: isUser.permanentDataDetails,
+        yearlyDataDetails: filteredYearlyDataDetails,
+        userId: isUser.userId
+      };
+
+      setFilteredData(newFilteredData);
+
+      let paymentAmount;
+    try {
+        // Fetch the service fee data
+        const feeResponse = await axios.get('https://api.toratax.com/toratax/rest/v1.0/fee/findservicefee/ITR_1');
+        const feeData = feeResponse.data;
+
+        const salariedStatus = newFilteredData.yearlyDataDetails[0].salaried;
+        const feeDetails = feeData.find(fee => salariedStatus === 1 ? fee.categoryId === 1 : fee.categoryId === 2);
+        
+        paymentAmount = feeDetails.serviceFee;
+
+    } catch (error) {
+        console.error('Error fetching service fee:', error);
+        toast.error("Unable to fetch service fee. Please try again.");
+        return;
+    }
+
+
+
+      //console.log('paymentAmount',paymentAmount);
+      if (typeof window.Razorpay === 'undefined') {
+          toast.error("Razorpay SDK is not loaded. Please try again.");
+          return;
+      }
+
+      const data = JSON.stringify({ amount: paymentAmount });
+
+      try {
+          const orderResponse = await axios.post(`${process.env.REACT_APP_API_BASE}payment/createOrder`, data, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': token,
+              }
+          });
+          console.log('orderResponse', orderResponse);
+
+          const options = {
+              key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+              amount: paymentAmount,
+              currency: "INR",
+              name: "ToraTax",
+              description: "Test Transaction",
+              image: "/favicon.png",
+              order_id: orderResponse.data.id,
+              handler: (response) => handlePaymentSuccess(response, orderResponse.data,newFilteredData),
+              prefill: {
+                  name: newFilteredData.permanentDataDetails.firstName,
+                  email:newFilteredData.permanentDataDetails.emailId,
+                  contact: newFilteredData.permanentDataDetails.phoneNumber,
+              },
+              notes: {
+                  address: "ToraTax"
+              },
+              theme: {
+                  color: "#3399cc"
+              }
+          };
+
+          const rzp1 = new window.Razorpay(options);
+          rzp1.on("payment.failed", handlePaymentFailure);
+          rzp1.open();
+      } catch (error) {
+          console.error(error);
+          toast.error("Unable to create order. Please try again.");
+          // Implement removeUserSession if needed
+          navigate('/signin');
+      }
+  };
+
+
+  const handlePaymentSuccess = async (response, orderResponse,newFilteredData) => {
+    console.log('response', response,isUser,orderResponse);
+    // toast.success("Payment successful!");
+
+    const paymentData = {
+      razorpay_payment_id: response.razorpay_payment_id,
+      transactionId: response.razorpay_payment_id,
+      amount: orderResponse.amount,
+      currency: orderResponse.currency,
+      status: "success",
+      paymentBy: isUser.permanentDataDetails.firstName + " " + isUser.permanentDataDetails.lastName,
+      transactionForYear: newFilteredData.yearlyDataDetails[0].itrYear
+    };
+    console.log('paymentData', paymentData);
+
+    try {
+      const apiResponse = await axios.post(`${process.env.REACT_APP_API_BASE}payment/response`, paymentData, {
+        headers: {
+          'Authorization': token,
+        },
+      });
+      console.log('Payment response', apiResponse);
+      // handleClose(); // Implement handleClose if needed
+      userItrInfo()
+    } catch (error) {
+      // handleClose(); // Implement handleClose if needed
+      console.error('Error sending payment response', error);
+      toast.error("Failed to send payment response. Please try again.");
+    }
+  };
+
+
+  const handlePaymentFailure = (response) => {
+    console.error(response);
+    toast.error("Payment failed. Please try again.");
+  };
   return (
     <>
-    <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       <section className=" d-table w-100 bg-primary  " style={{ background: "url('/images/bg.png') center center" }} >
         <div className="container">
-        <div className="row mt-5 justify-content-center">
+          <div className="row mt-5 justify-content-center">
             <div className="col-lg-12 text-center">
               <div className="pages-heading">
                 <h3 className="fw-bold text-white mb-0 mt-4"> Welcome in ToraTax </h3>
@@ -253,7 +391,7 @@ const Profile = () => {
                   <div className="row align-items-center">
                     <div className="col-lg-2 col-md-3 text-md-start text-center">
 
-                      <svg xmlns="http://www.w3.org/2000/svg"  className="avatar avatar-large rounded-circle shadow d-block mx-auto" fill-rule="evenodd" clip-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 4335 4335" id="avatar"><path fill="#595bd4" d="M2155 4191c1116 0 2021-905 2021-2021S3271 149 2155 149 134 1054 134 2170s905 2021 2021 2021z" class="color6d97b5 svgShape"></path><path fill="#53d86a" d="M2156 1207h14c308 9 555 304 555 667s-247 659-555 667h-15c-351 0-569-345-569-668 0-363 247-659 555-667h15zM914 3737s417-823 719-963c247-114 800-114 1046 0 302 139 719 963 719 963-411 335-929 423-1173 446v8s-25 0-69-3c-44 3-69 3-69 3v-8c-244-23-762-111-1173-446z" class="colore6e6e6 svgShape"></path></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="avatar avatar-large rounded-circle shadow d-block mx-auto" fill-rule="evenodd" clip-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 4335 4335" id="avatar"><path fill="#595bd4" d="M2155 4191c1116 0 2021-905 2021-2021S3271 149 2155 149 134 1054 134 2170s905 2021 2021 2021z" class="color6d97b5 svgShape"></path><path fill="#53d86a" d="M2156 1207h14c308 9 555 304 555 667s-247 659-555 667h-15c-351 0-569-345-569-668 0-363 247-659 555-667h15zM914 3737s417-823 719-963c247-114 800-114 1046 0 302 139 719 963 719 963-411 335-929 423-1173 446v8s-25 0-69-3c-44 3-69 3-69 3v-8c-244-23-762-111-1173-446z" class="colore6e6e6 svgShape"></path></svg>
                       {/* <img src="/images/60111.jpg" className="avatar avatar-large rounded-circle shadow d-block mx-auto" alt="" /> */}
                     </div>
 
@@ -262,8 +400,8 @@ const Profile = () => {
                         <div className="col-md-7 text-md-start text-center mt-4 mt-sm-0">
                           <h3 className="title mb-0">
                             {firstName} {lastName}
-                            </h3>
-                          
+                          </h3>
+
                           <small className="text-muted h6 me-2 d-block mt-2">Username : {userName} </small>
 
                         </div>
@@ -290,122 +428,122 @@ const Profile = () => {
 
 
             <div className="col-lg-12 col-12">
-              
+
 
               <div className="border-bottom pb-4">
                 <div className="row">
                   <div className="col-md-12 mt-4">
                     <div className="border-bottom pb-4">
-                      {role==='admin' ? 
-                      <h5>Details  </h5>
-                      :
-                      <h5>ITR Details  </h5>
-                    }
-                      
+                      {role === 'admin' ?
+                        <h5>Details  </h5>
+                        :
+                        <h5>ITR Details  </h5>
+                      }
+
                     </div>
                     <div className="table-responsive bg-white shadow rounded mt-4">
-                      {role==='ADMIN'?
-                      //  admin table
-                      <>
-                      <h4 className='px-3 pt-2'>Users :</h4>
-                      <AdminProfile isAdminData={isAdminData} />
-                      </>
-                   
+                      {role === 'ADMIN' ?
+                        //  admin table
+                        <>
+                          <h4 className='px-3 pt-2'>Users :</h4>
+                          <AdminProfile isAdminData={isAdminData} />
+                        </>
 
-                      :
 
-                      // user table
-                      <table className="table mb-0 table-center">
-                      <thead className="bg-light">
-                        <tr>
-                          <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
-                          <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
-                          <th scope="col" className="border-bottom p-3 text-center " style={{ maxWidth: "150px" }}>Service Year</th>
-                          {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th> */}
-                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
-                         
-                          {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th> */}
-                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
-                          <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Action</th>
-                         
-                        </tr>
-                      </thead>
-                      <tbody>
-                      
-                        
-                        { isUserItrInfo.length ? isUserItrInfo.map((item, index) => (
-                          <tr key={index}>
-                            <td className="p-3">{index + 1}</td>
-                            <td className="p-3">
-                              <div className="d-flex">
-                                <span className="text-muted h5"><FaClipboardList /></span>
-                                <div className="flex-1 content ms-3">
-                                  <p className="text-primary fw-bold mb-0"> 
-                                  {/* {isUserData.yearlyDataDetails.itrYear} */}
-                                  
-                                  <Moment format="YYYY/MM/DD">
-                                      {item.requestedDate}
-                                  </Moment>
-                                  </p>
-                                  {/* <p className="text-muted small mb-1">Document Type: {item.document_type}</p> */}
-                                  
-                                </div>
-                              </div>
+                        :
 
-                            </td>
-                            <td className="text-center small p-3 text-muted fw-bold">
-                              {item.serviceYear}
-                            </td>
-                            {/* <td className="text-center small p-3 text-muted">{item.request_date}</td> */}
-                            <td className="text-center small p-3 text-muted fw-bold text-capitalize">{item.itrFillingStatus}</td>
-                            
-                            {/* <td className="text-center small p-3 text-muted">empty <span role="button"><MdOutlineEdit/></span></td> */}
-                            <td className="text-center small p-3 text-muted ">
-                              <span  style={getPaymentStatusStyle(item.paymentStatus)}>
-                                <span className='ms-2'>
-                                  
-                                  {item.paymentStatus}
-                                  </span>
-                                 {/* {item.paymentStatus === 'PENDING' ? <RiSecurePaymentFill  className='fs-4 text-primary' />:<RiSecurePaymentLine className='fs-4 text-success' />}
+                        // user table
+                        <table className="table mb-0 table-center">
+                          <thead className="bg-light">
+                            <tr>
+                              <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
+                              <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
+                              <th scope="col" className="border-bottom p-3 text-center " style={{ maxWidth: "150px" }}>Service Year</th>
+                              {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th> */}
+                              <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
+
+                              {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Comments</th> */}
+                              <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Payment</th>
+                              <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Action</th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+
+
+                            {isUserItrInfo.length ? isUserItrInfo.map((item, index) => (
+                              <tr key={index}>
+                                <td className="p-3">{index + 1}</td>
+                                <td className="p-3">
+                                  <div className="d-flex">
+                                    <span className="text-muted h5"><FaClipboardList /></span>
+                                    <div className="flex-1 content ms-3">
+                                      <p className="text-primary fw-bold mb-0">
+                                        {/* {isUserData.yearlyDataDetails.itrYear} */}
+
+                                        <Moment format="YYYY/MM/DD">
+                                          {item.requestedDate}
+                                        </Moment>
+                                      </p>
+                                      {/* <p className="text-muted small mb-1">Document Type: {item.document_type}</p> */}
+
+                                    </div>
+                                  </div>
+
+                                </td>
+                                <td className="text-center small p-3 text-muted fw-bold">
+                                  {item.serviceYear}
+                                </td>
+                                {/* <td className="text-center small p-3 text-muted">{item.request_date}</td> */}
+                                <td className="text-center small p-3 text-muted fw-bold text-capitalize">{item.itrFillingStatus}</td>
+
+                                {/* <td className="text-center small p-3 text-muted">empty <span role="button"><MdOutlineEdit/></span></td> */}
+                                <td className="text-center small p-3 text-muted ">
+                                  <span style={getPaymentStatusStyle(item.paymentStatus)} >
+                                    <span className='ms-2'>
+
+                                      {item.paymentStatus}
+                                    </span>
+                                    {/* {item.paymentStatus === 'PENDING' ? <RiSecurePaymentFill  className='fs-4 text-primary' />:<RiSecurePaymentLine className='fs-4 text-success' />}
                                   */}
-                                  <span  className='me-2'>
-                               {item.paymentStatus === 'PENDING' ? <RiSecurePaymentFill className='fs-5 ms-2' />:<RiSecurePaymentLine className='fs-5'/>}
+                                    <span className='me-2'>
+                                      {item.paymentStatus === 'PENDING' ? <RiSecurePaymentFill  role='button' className='fs-5 ms-2'onClick={(e)=>handleSubmit(item)} /> : <RiSecurePaymentLine className='fs-5' />}
 
+                                    </span>
                                   </span>
-                              </span>   
-                            </td>
-                            <td className="text-center small p-3 text-muted">
-                              <div className='d-flex gap-3 justify-content-center align-items-center '>
-                                <div  className='cursor-pointer' onClick={() => handleShow(index)}>
-                                  <GrDocumentImage className='text-warning fs-5' role="button"/>
-                                </div>
-                                  
-                               {/* <LiaEdit className='text-success '/> */}
-                               <AiOutlineDelete className='text-danger fs-4' role="button"/>
+                                </td>
+                                <td className="text-center small p-3 text-muted">
+                                  <div className='d-flex gap-3 justify-content-center align-items-center '>
+                                    <div className='cursor-pointer'  onClick={(e)=>handleShow(item)}>
+                                      <GrDocumentImage className='text-warning fs-5' role="button" />
+                                    </div>
+
+                                    {/* <LiaEdit className='text-success '/> */}
+                                    <AiOutlineDelete className='text-danger fs-4' role="button" />
 
 
-                              </div>
-                              </td>
-                           
-                          </tr>
-                        ))
-                      :
-                      <tr>
-                        <td>
-                         <h5> data not avilable </h5>
+                                  </div>
+                                </td>
 
-                        </td>
-                      </tr>
-                      }
+                              </tr>
+                            ))
+                              :
+                              <tr>
+                                <td>
+                                  <h5> data not avilable </h5>
+
+                                </td>
+                              </tr>
+                            }
 
 
-                      </tbody>
-                    </table>
-                      
+                          </tbody>
+                        </table>
+
                       }
                     </div>
 
-                    
+
                   </div>
 
 
@@ -416,7 +554,7 @@ const Profile = () => {
           </div>
         </div>
       </section>
-      <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails} yearlyDataDetails={isUser.yearlyDataDetails}/>
+      <DocumentShowModal show={show} handleClose={handleClose} isYear={isYear} setIsYear={setIsYear} permanentDataDetails={isUser.permanentDataDetails} yearlyDataDetails={isUser.yearlyDataDetails} />
     </>
   )
 }
