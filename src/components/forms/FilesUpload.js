@@ -111,7 +111,7 @@ console.log('isState',isState);
     const handleSubmit = async () => {
         var paymentAmount;
     
-        {cardType === 'Salaried' ? paymentAmount = '1': paymentAmount =selectedFee.serviceFee; }
+        {cardType === 'Salaried' ? paymentAmount = selectedFee.serviceFee: paymentAmount =selectedFee.serviceFee; }
        // console.log('paymentAmount',paymentAmount);
         if (typeof window.Razorpay === 'undefined') {
             toast.error("Razorpay SDK is not loaded. Please try again.");
