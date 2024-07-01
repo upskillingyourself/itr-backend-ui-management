@@ -10,7 +10,7 @@ const FormFiles = () => {
   const [showForm, setShowForm] = useState(true);
   const onSubmit = (data) => {
     // Handle the submission of file data
-    console.log(data);
+    // console.log(data);
 
     const config = {
       headers: {
@@ -20,18 +20,15 @@ const FormFiles = () => {
 
     console.log(data, config);
     axios
-      .post("https://example.com/upload", data,config)
+      .post("https://example.com/upload", data, config)
 
       .then((response) => {
-        console.log(response);
+        // console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-
- 
 
   function changeForm() {
     console.log("run");
@@ -76,7 +73,7 @@ const FormFiles = () => {
             cols="40"
             {...register("address", { required: true })}
           ></textarea>
-          
+
           <br />
 
           <button type="button" onClick={changeForm}>

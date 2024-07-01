@@ -1,37 +1,38 @@
-import React from 'react'
-import Modal from 'react-bootstrap/Modal';
-import SalariedForm from '../forms/SalariedForm';
+import React from "react";
+import Modal from "react-bootstrap/Modal";
+import SalariedForm from "../forms/SalariedForm";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const HeroModal = ({ show, handleClose, cardType,selectedFee }) => {
-  
+const HeroModal = ({ show, handleClose, cardType, selectedFee }) => {
   const { register, handleSubmit, setValue } = useForm();
   const [panFile, setPanFile] = useState();
 
   const [showForm, setShowForm] = useState(true);
 
   function changeForm() {
-    console.log("run");
+    // console.log("run");
     setShowForm(!showForm);
   }
   return (
     <Modal
-      size="lg" show={show} onHide={handleClose}
-      aria-labelledby="example-modal-sizes-title-lg">
+      size="lg"
+      show={show}
+      onHide={handleClose}
+      aria-labelledby="example-modal-sizes-title-lg"
+    >
       <Modal.Header closeButton>
         <Modal.Title>
-          <span className='text-primary'>
-            {cardType}
-          </span>
-
+          <span className="text-primary">{cardType}</span>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <SalariedForm cardType={cardType} handleClose={handleClose} selectedFee={selectedFee}/>
-
-
+        <SalariedForm
+          cardType={cardType}
+          handleClose={handleClose}
+          selectedFee={selectedFee}
+        />
 
         {/* <form onSubmit={handleSubmit(onSubmit)}>
           {showForm === true ? (
@@ -102,9 +103,6 @@ const HeroModal = ({ show, handleClose, cardType,selectedFee }) => {
           )}
           <button type="submit">Submit</button>
         </form> */}
-
-
-
       </Modal.Body>
       {/* <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -116,6 +114,6 @@ const HeroModal = ({ show, handleClose, cardType,selectedFee }) => {
         </Modal.Footer> */}
     </Modal>
   );
-}
+};
 
-export default HeroModal
+export default HeroModal;

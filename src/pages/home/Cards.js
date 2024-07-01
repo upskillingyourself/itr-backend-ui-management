@@ -48,7 +48,7 @@ console.log('selectedFeeselectedFee',selectedFee);
                 {isFee.map((item) => (
                     <div className="col-md-6" key={item.categoryId}>
                         <div
-                            className="card"
+                            className="card mb-4"
                             style={{
                                 background: item.categoryId === 1 ? "linear-gradient(to bottom, #4e8cff, #0052d4)" : "#ffffff",
                                 color: item.categoryId === 1 ? "#fff" : "#000",

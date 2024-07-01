@@ -10,7 +10,7 @@ import { getToken } from '../../utils/common';
 const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyDataDetails ,isYear}) => {
 
    
-    console.log('yearlyDataDetails',yearlyDataDetails,permanentDataDetails,isYear);
+   // console.log('yearlyDataDetails',yearlyDataDetails,permanentDataDetails,isYear);
     const [documents, setDocuments] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState({});
@@ -50,7 +50,7 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyData
                     responseType: 'blob'  // Ensure response type is blob to handle file download
                 }
             );
-            console.log(response, 'response');
+          //  console.log(response, 'response');
             // Create a blob object from response data
             const file = new Blob([response.data], { type: response.headers['content-type'] });
 
@@ -89,7 +89,7 @@ const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyData
                     'Authorization': token,
                 },
             });
-            console.log('fileupload', response);
+           // console.log('fileupload', response);
             setUploadStatus((prevStatus) => ({ ...prevStatus, [docTypeId]: 'Upload Complete' }));
         } catch (error) {
             console.error("Error uploading file:", error);
