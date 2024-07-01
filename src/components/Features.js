@@ -15,9 +15,10 @@ const Features = () => {
               to abide by the listed policy and terms & conditions
             </p>
           </div>
-          <div className="row">
+          <div className=" mx-auto" style={{width:"70%"}}>
+          <div className="row  ">
             <div className="col-12 col-sm-6 d-flex flex-column align-items-center mb-4">
-              <div className="our-team" style={{ width: "150px" }}>
+              <div className="our-team " style={{ width: "150px" }}>
                 <img src="images/expert.jpg" alt="Expert Assistance" />
               </div>
               <h3 className="title mt-4">Expert Assistance</h3>
@@ -40,6 +41,7 @@ const Features = () => {
               </div>
               <h3 className="title mt-4">Secure & Reliable</h3>
             </div>
+          </div>
           </div>
         </div>
       </section>
