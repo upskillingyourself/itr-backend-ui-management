@@ -14,6 +14,7 @@ import DocumentShowModal from '../../../components/Modals/DocumentShowModal'
 const UserDataTableModal = ({ showModal, handleCloseUserModal,user}) => {
   const [isUserItrInfo, setUserItrInfo] = useState([]);
   const [isUserDocumentDetails, setUserDocumentDetails] = useState();
+  const [isYear,setIsYear]=useState()
   const [show, setShow] = useState(false);
 
   const [isUser, setUser] = useState({});
@@ -21,8 +22,9 @@ const UserDataTableModal = ({ showModal, handleCloseUserModal,user}) => {
   const token = getToken();
   
   const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleShow = (item) => {
     handleCloseUserModal()
+    setIsYear(item.serviceYear)
        setShow(true);
   };
   useEffect( ()=>{
@@ -130,7 +132,7 @@ const styles = {
                       <thead className="bg-light">
                         <tr>
                           <th scope="col" className="border-bottom p-3" style={{ maxWidth: "300px" }}>ID</th>
-                          <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request Year</th>
+                          <th scope="col" className="border-bottom p-3 " style={{ maxWidth: "150px" }}>ITR Request date</th>
                           <th scope="col" className="border-bottom p-3 text-center " style={{ maxWidth: "150px" }}>Service Year</th>
                           {/* <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "150px" }}>Request Date</th> */}
                           <th scope="col" className="border-bottom p-3 text-center" style={{ maxWidth: "100px" }}>Status</th>
@@ -187,12 +189,12 @@ const styles = {
                             </td>
                             <td className="text-center small p-3 text-muted">
                               <div className='d-flex gap-3 justify-content-center align-items-center '>
-                                <div  className='cursor-pointer' onClick={() => handleShow(index)}>
+                                <div  className='cursor-pointer' onClick={(e) => handleShow(item)}>
                                   <GrDocumentImage className='text-warning fs-5' role="button"/>
                                 </div>
                                   
                                {/* <LiaEdit className='text-success '/> */}
-                               <AiOutlineDelete className='text-danger fs-4' role="button"/>
+                               {/* <AiOutlineDelete className='text-danger fs-4' role="button"/> */}
 
 
                               </div>
@@ -223,7 +225,7 @@ const styles = {
           </Button>
         </Modal.Footer> */}
     </Modal>
-    <DocumentShowModal show={show} handleClose={handleClose} permanentDataDetails = {isUser.permanentDataDetails} yearlyDataDetails={isUser.yearlyDataDetails}/>
+    <DocumentShowModal show={show} handleClose={handleClose} isYear={isYear} setIsYear={setIsYear} permanentDataDetails = {isUser.permanentDataDetails} yearlyDataDetails={isUser.yearlyDataDetails} selectedUser={user}/>
     </div>
   )
 }

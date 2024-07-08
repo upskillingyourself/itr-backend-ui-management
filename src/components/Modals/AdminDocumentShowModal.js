@@ -6,11 +6,11 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getToken } from '../../utils/common';
-import Cookies from "js-cookie";
 
-const DocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyDataDetails, isYear, selectedUser }) => {
-    const role = Cookies.get('role');
-console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear);
+const AdminDocumentShowModal = ({ show, handleClose, permanentDataDetails, yearlyDataDetails ,isYear}) => {
+
+   
+   // console.log('yearlyDataDetails',yearlyDataDetails,permanentDataDetails,isYear);
     const [documents, setDocuments] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState({});
@@ -21,6 +21,7 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
             try {
                 const response = await axios.get('https://api.toratax.com/toratax/rest/v1.0/documenttypes');
                 const data = response.data;
+                console.log('data',data);
                 const documentsArray = Object.values(data);
                 setDocuments(documentsArray);
             } catch (error) {
@@ -50,12 +51,15 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
                     responseType: 'blob'  // Ensure response type is blob to handle file download
                 }
             );
-
+          //  console.log(response, 'response');
+            // Create a blob object from response data
             const file = new Blob([response.data], { type: response.headers['content-type'] });
+
+            // Create a URL for the blob object and create a link element to trigger download
             const fileURL = window.URL.createObjectURL(file);
             const link = document.createElement('a');
             link.href = fileURL;
-            link.setAttribute('download', documentName);
+            link.setAttribute('download', documentName); // Set the download attribute with the file name
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -76,24 +80,17 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
 
         const formData = new FormData();
         formData.append('document', selectedFile);
-        formData.append('info', JSON.stringify({ typeId: docTypeId, year: isYear 
-        }));
-
-        let uploadUrl = process.env.REACT_APP_API_BASE + "fileupload";
-
-        if (docTypeId === 7 || docTypeId === 8) {
-            uploadUrl = process.env.REACT_APP_API_BASE + `upload/${selectedUser}`;
-        }
+        formData.append('info', JSON.stringify({ typeId: docTypeId ,year:isYear}));
 
         try {
             setUploadStatus((prevStatus) => ({ ...prevStatus, [docTypeId]: 'Uploading...' }));
-            const response = await axios.post(uploadUrl, formData, {
+            const response = await axios.post(process.env.REACT_APP_API_BASE + "fileupload", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': token,
                 },
             });
-
+           // console.log('fileupload', response);
             setUploadStatus((prevStatus) => ({ ...prevStatus, [docTypeId]: 'Upload Complete' }));
         } catch (error) {
             console.error("Error uploading file:", error);
@@ -134,13 +131,6 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
         return details;
     };
 
-    const filteredDocuments = documents.filter(doc => {
-        if (role !== 'ADMIN' && (doc.documentName === 'Acknowledgement' || doc.documentName === 'ITR FORM')) {
-            return false;
-        }
-        return true;
-    });
-
     return (
         <Modal
             size="md"
@@ -163,9 +153,8 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredDocuments.map((doc) => {
+                        {documents.map((doc) => {
                             const matchedDocument = getDocumentDetails(doc.documentTypeId);
-                           // console.log('matchedDocument',matchedDocument);
                             if (matchedDocument) {
                                 return (
                                     <tr
@@ -192,82 +181,34 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
                             } else {
                                 return (
                                     <tr key={doc.documentTypeId} style={rowStyle}>
-                                        
                                         <td className='text-capitalize fw-normal'>{doc.documentName}</td>
                                         <td>
-                                            {role === 'ADMIN' ? (
-                                                (doc.documentName === "Acknowledgement" || doc.documentName === "ITR FORM") ? (
-                                                    <div>
-                                                        
-                                                        <div className='d-flex flex-column '>
-                                                        <input type="file" onChange={handleFileChange} />
-                                                        <button className='btn btn-primary btn-sm mt-2' onClick={() => handleUpload(doc.documentTypeId)}>
-                                                            Upload &nbsp;
-                                                            <IoCloudUpload size={24} />
-                                                        </button>
-                                                        {uploadStatus[doc.documentTypeId] && (
-                                                            <div className="mt-2">
-                                                                {uploadStatus[doc.documentTypeId] === 'Uploading...' && (
-                                                                    <div className="alert alert-warning" role="alert">
-                                                                        Uploading...
-                                                                    </div>
-                                                                )}
-                                                                {uploadStatus[doc.documentTypeId] === 'Upload Complete' && (
-                                                                    <div className="alert alert-success" role="alert">
-                                                                        Upload Complete
-                                                                    </div>
-                                                                )}
-                                                                {uploadStatus[doc.documentTypeId] === 'Upload Failed' && (
-                                                                    <div className="alert alert-danger" role="alert">
-                                                                        Upload Failed
-                                                                    </div>
-                                                                )}
+                                            <div className='d-flex flex-column '>
+                                                <input type="file" onChange={handleFileChange} />
+                                                <button className='btn btn-primary btn-sm mt-2' onClick={() => handleUpload(doc.documentTypeId)}>
+                                                    Upload &nbsp;
+                                                    <IoCloudUpload size={24} />
+                                                </button>
+                                                {uploadStatus[doc.documentTypeId] && (
+                                                    <div className="mt-2">
+                                                        {uploadStatus[doc.documentTypeId] === 'Uploading...' && (
+                                                            <div className="alert alert-warning" role="alert">
+                                                                Uploading...
+                                                            </div>
+                                                        )}
+                                                        {uploadStatus[doc.documentTypeId] === 'Upload Complete' && (
+                                                            <div className="alert alert-success" role="alert">
+                                                                Upload Complete
+                                                            </div>
+                                                        )}
+                                                        {uploadStatus[doc.documentTypeId] === 'Upload Failed' && (
+                                                            <div className="alert alert-danger" role="alert">
+                                                                Upload Failed
                                                             </div>
                                                         )}
                                                     </div>
-                                                    </div>
-                                                ) : (
-                                                    <div
-                                                        className="text-center gap-2 text-white px-3 py-1 rounded-pill bg-danger"
-                                                        role="button"
-                                                        onClick={() => handleUpload(doc.documentTypeId)}
-                                                    >
-                                                        Not Uploaded &nbsp;
-                                                        <IoCloudUpload
-                                                            role="button"
-                                                            size={24}
-                                                            className="text-white"
-                                                        />
-                                                    </div>
-                                                )
-                                            ) : (
-                                                <div className='d-flex flex-column '>
-                                                    <input type="file" onChange={handleFileChange} />
-                                                    <button className='btn btn-primary btn-sm mt-2' onClick={() => handleUpload(doc.documentTypeId)}>
-                                                        Upload &nbsp;
-                                                        <IoCloudUpload size={24} />
-                                                    </button>
-                                                    {uploadStatus[doc.documentTypeId] && (
-                                                        <div className="mt-2">
-                                                            {uploadStatus[doc.documentTypeId] === 'Uploading...' && (
-                                                                <div className="alert alert-warning" role="alert">
-                                                                    Uploading...
-                                                                </div>
-                                                            )}
-                                                            {uploadStatus[doc.documentTypeId] === 'Upload Complete' && (
-                                                                <div className="alert alert-success" role="alert">
-                                                                    Upload Complete
-                                                                </div>
-                                                            )}
-                                                            {uploadStatus[doc.documentTypeId] === 'Upload Failed' && (
-                                                                <div className="alert alert-danger" role="alert">
-                                                                    Upload Failed
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 );
@@ -280,4 +221,4 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
     );
 }
 
-export default DocumentShowModal;
+export default AdminDocumentShowModal;
