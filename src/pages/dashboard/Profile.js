@@ -400,7 +400,7 @@
 
         const handleDownload = async (documentTypeId) => {
             try {
-                // Find the document in isUserData that matches the documentTypeId
+                
                 const userData = isUserData.find(data => {
                     return data.documentDetails.some(doc => doc.documentTypeId === documentTypeId);
                 });
@@ -430,7 +430,7 @@
                         headers: {
                             'Authorization': token,
                         },
-                        responseType: 'blob'  // Ensure response type is blob to handle file download
+                        responseType: 'blob' 
                     }
                 );
         
@@ -439,10 +439,10 @@
                 if (typeof document !== 'undefined') {
                     const file = new Blob([response.data], { type: response.headers['content-type'] });
                     const fileURL = window.URL.createObjectURL(file);
-                    const link = window.document.createElement('a'); // Explicitly use window.document
+                    const link = window.document.createElement('a'); 
                     link.href = fileURL;
                     link.setAttribute('download', documentName);
-                    window.document.body.appendChild(link); // Explicitly use window.document
+                    window.document.body.appendChild(link); 
                     link.click();
                     link.remove();
                 } else {
