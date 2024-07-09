@@ -36,7 +36,7 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
     const handleDownload = async (documentTypeId, documentId, documentName, documentPath) => {
         try {
             const response = await axios.post(
-                'https://api.toratax.com/toratax/rest/v1.0/downloadfile',
+                process.env.REACT_APP_API_BASE + 'downloadfile',
                 {
                     documentTypeId: documentTypeId,
                     documentId: documentId,
@@ -50,7 +50,7 @@ console.log('permanentDataDetails',yearlyDataDetails,permanentDataDetails,isYear
                     responseType: 'blob'  // Ensure response type is blob to handle file download
                 }
             );
-
+            console.log('response',response);
             const file = new Blob([response.data], { type: response.headers['content-type'] });
             const fileURL = window.URL.createObjectURL(file);
             const link = document.createElement('a');

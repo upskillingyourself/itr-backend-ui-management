@@ -410,44 +410,49 @@
                     return;
                 }
         
-                const document = userData.documentDetails.find(doc => doc.documentTypeId === documentTypeId);
-                if (!document) {
+                const documentData = userData.documentDetails.find(doc => doc.documentTypeId === documentTypeId);
+                if (!documentData) {
                     console.error(`No document found with documentTypeId ${documentTypeId}`);
                     return;
                 }
         
-                const { documentId, documentName, documentPath } = document;
-                
+                const { documentId, documentName, documentPath } = documentData;
         
-                
-                    const response = await axios.post(
-                        'https://api.toratax.com/toratax/rest/v1.0/downloadfile',
-                        {
-                            documentTypeId: documentTypeId,
-                            documentId: documentId,
-                            documentName: documentName,
-                            documentPath: documentPath
+                const response = await axios.post(
+                    process.env.REACT_APP_API_BASE + 'downloadfile',
+                    {
+                        documentTypeId: documentTypeId,
+                        documentId: documentId,
+                        documentName: documentName,
+                        documentPath: documentPath
+                    },
+                    {
+                        headers: {
+                            'Authorization': token,
                         },
-                        {
-                            headers: {
-                                'Authorization': token,
-                            },
-                            responseType: 'blob'  // Ensure response type is blob to handle file download
-                        }
-                    );
+                        responseType: 'blob'  // Ensure response type is blob to handle file download
+                    }
+                );
         
+                console.log('response', response);
+        
+                if (typeof document !== 'undefined') {
                     const file = new Blob([response.data], { type: response.headers['content-type'] });
                     const fileURL = window.URL.createObjectURL(file);
-                    const link = document.createElement('a');
+                    const link = window.document.createElement('a'); // Explicitly use window.document
                     link.href = fileURL;
                     link.setAttribute('download', documentName);
-                    document.body.appendChild(link);
+                    window.document.body.appendChild(link); // Explicitly use window.document
                     link.click();
                     link.remove();
+                } else {
+                    console.error('document is not defined in the current scope');
+                }
             } catch (error) {
                 console.error('Error downloading document:', error);
             }
         };
+        
         
         return (
             <>
